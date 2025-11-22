@@ -1,0 +1,88 @@
+# NcLang
+
+Nc programming language or ncLang is a next generation constraint based strongly typed programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily intergrate future technologies with its robust design.
+It is a language that is designed from its infancy to accomodate every known area of programming and also, importantly, make the programmer's experience near equal or comparable to programming languages designed for those specific areas. The language does this by centralizing specific functionalities of those areas of programming and allowing the programmer to only use them when programming for those areas. An example of said functionality would be using the programming language as a systems programming language, mobile systems programming language, GUI programming language, web programming language, scripting programming language and many more(Although it cannot be used as a data language, that is JSON or XML, nc data representation language already serves such purpose and is natively intergrated in nc programming language). It is essentially a platform aware language and it is for this reason the I call the language a TGPL(Truly General Purpose Programming Language).
+
+Below are the features of the nc programming language:
+
+- Positional base number entry from bases 2 to 36 (For both integer and real numbers)
+- Raw user language identifier entry
+- Raw user string identifier entry
+- Character entry
+- Multiline string entry
+- Embedded raw strings
+- Text action entry (Known as escape sequences in C, C++ and most other programming languages)
+- High width integers up to 512-bytes or 4096-bits
+- Platform integers
+- IEEE-745 binary floating point numbers (Reluctantly added)
+- Nc real numbers (A custom decimal floating point implementation native to the language)
+- Strongly typed language
+- Highly expressive type system
+- Stack array type(An array data structure that only uses the stack memory space invented just for the language)
+- Static array type
+- Integer range types
+- Product type creators (Similar to structs in C and Rust)
+- Sum type creators (Similar to enums in Rust and unions in C and C++)
+- Semantic type creators (Similar to derived types in Ada but with added semantics)
+- Semantic ranged integer type creators (Similar to Integers in Ada)
+- Value definition type creators (Similar to enum classes in C++)
+- Type constructors (Similar in concept to Higher Kinded Types in Haskell but limited in semantics to keep it simple)
+- Value semantics:
+  - Move value semantics (Non destructive move unlike in rust and like in C++)
+  - Copy value semantics
+- Functions
+- Marcos (Inlined functions devoid of value semantics)
+- Objects (Known as variables in various programming languages)
+- Objects are immutable by default
+- Circular dependency resolution for object initialization in the global space
+- Thread local objects
+- Loops:
+  - For iterator loop (Similar to for loops in the Rust programming language)
+  - While loop (Similar to for loops in the C and C++ programming languages)
+- Interfaces via Contract and impl (Similar to trait and impls in Rust)
+- Language defined generic string interface
+- Robust compile time evaluation semantics
+- Value argument list generators (Allows value list generation in any value argument entry)
+- Access restriction semantics (Controls the visibility of language items)
+- Import system
+- Compile time polymorphism:
+  - Type parameters (Basically generics in some programming languages and parametric polymorphism in programming)
+  - Compile time value parameters (Basically the value parameter version of type parameters, can be seen in parametric polymorphism implementation in languages like Rust and C++)
+- Run time polymorphism:
+  - Contract types (Basically impl types in Rust but with a significantly different implementation)
+- Groupings (Pinnacle of less typing and semantic syntax grouping in a high level context)
+- Variadics (Similar in concept to paramter packs in C++)
+- Tuples and variants (Basically anonymous product and sum types enabled by the variadics feature)
+- Language communication interface (LCI):
+  - Attribute LCI (Includes the various language constraints and many more)
+  - Expression LCI (Exposes interfaces to language metadata and special language functions)
+  - Type LCI (Exposes interfaces to language type system metadata)
+  - Miscellaneous LCI (Involves unrelated special language functionality)
+- Constraint application (Allows the entry of user defined constraint on various language items)
+- Unified function call (UFC)
+- Redefined precedence for various operators
+- Limited operator overloading
+- Operator combinations (Allows for chaning certain operators)
+- Collection expressions
+- Literal tags (Known as literal types in C++)
+- Custom collection expression definition
+- Custom literal tag definition
+- Blocks as expressions
+- Conditional expressions:
+  - If conditional expression
+  - Match condtional expression
+  - Or-field query conditional expression (A more robust form of pattern matching expression in functional languages and Rust)
+- References:
+  - Value references (Similar in concept to references in C++ and Rust)
+  - Memory address references (Similar in concept to pointers in C and C++):
+    - Non allocating memory address references (Basically raw pointers in C and C++)
+    - Allocating memory address references (Higher form of smart pointers in C++)
+- Implicit lifetime semantics (Similar in concept to explicit lifetime parameters in rust)
+- Scope defintions (Similar in concept to namespaces in C++)
+- Runtime type introspection
+- Value unpacking (Similar to structured binding in C++ but way more expressive and robust)
+- Foreign interface
+- Platform agnostic computing
+- Novel, asethetic and intuitive - subjective opinion - syntax
+- Well defined language semantics
+- Excellent compiler error messages called error logs
