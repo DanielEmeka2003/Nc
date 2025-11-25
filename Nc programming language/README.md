@@ -2,11 +2,13 @@
 
 Nc programming language or informally called ncLang is a next generation constraint based strongly typed programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
 
-It is a language that is designed from its infancy to accommodate every known area of programming and also, importantly, make the programmer's experience near equal or comparable to programming languages designed for those known areas. The language does this by centralizing specific functionalities of those areas of programming and allowing the programmer to only use them when programming for those areas. An example of said functionality would be using the programming language as a systems programming language, mobile systems programming language, **GUI** programming language, web programming language, scripting programming language and many more(Although it cannot be used as a data language, that is **JSON** or **XML**, nc data representation language already serves such purpose and is natively integrated in nc programming language).
+It is a language that is designed from its infancy to accommodate every known area of programming and also, importantly, make the programmer's experience near equal or comparable to programming languages designed for those known areas. The language does this by centralizing specific functionalities of those areas of programming and allowing the programmer to only use them when programming for those areas. An example of said functionality would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, scripting programming language and many more(Although it cannot be used as a data language, that is **JSON** or **XML**, nc data representation language already serves such purpose and is natively integrated in nc programming language).
 
 It is essentially a platform aware language and it is for this reason the I call the language a **TGPL**(Truly General Purpose Programming Language).
 
 ## NcLang Features
+
+The following describes some of the many features of the nc programming language:
 
 - Positional base number entry from bases 2 to 36 (For both integer and real numbers)
 - Raw user language identifier entry
@@ -99,7 +101,22 @@ It is essentially a platform aware language and it is for this reason the I call
 import marco std:print
 
 fn main {
-    print("Hello World(from nc programming language)\n")
+    print("Hello World(from nc programming language)")
+}
+```
+
+- Raw user string identifier and raw language identifier entry example
+
+```rust
+fn main {
+    obj r"I love 🧸s" = true
+    obj r:for = true
+    obj r"(✈️ 🏢)Historical event?" = true
+    obj r:struct = true
+    
+    must_use_identifiers(r"I love 🧸s", r:for, r"(✈️ 🏢)Historical event?", r:struct)
+    
+    fn must_use_identifiers(obj (_, _, _, _): bool) {}
 }
 ```
 
@@ -108,8 +125,8 @@ fn main {
 ```rust
 import type std:alloc:basic
 
-fn value_ref(obj _: &ui4) {}
-fn memory_address_ref(obj _: *ui4) {}
+fn value_ref(obj _: &ui4, obj _: mut&ui4) {}
+fn memory_address_ref(obj _: *ui4, obj _: mut*ui4) {}
 fn alloc_memory_address_ref(obj alloc: {*}ui4) {
     obj: alloc:basic[ui4].deallocate()
 }
@@ -117,8 +134,8 @@ fn alloc_memory_address_ref(obj alloc: {*}ui4) {
 fn main {
     obj a: ui4()
     
-    value_ref(&a)
-    memory_address_ref(addressof a)
+    value_ref(&a, mut&a)
+    memory_address_ref(addressof a, mut addressof a)
     alloc_memory_address_ref(obj: alloc:basic[ui4].allocate())
 }
 ```
@@ -130,6 +147,7 @@ import marco std:printf
 
 contract[type Self] animal =
 fn sound(obj self: &Self) &str
+fn name(obj self: &Self) &str
 end
 
 struct (dog, cat)
@@ -137,7 +155,11 @@ struct (dog, cat)
 scope @dog =
 impl[dog] animal =
 fn sound(obj _: &Self) {
-    -> "bark"
+    -> "woof"
+}
+
+fn name(obj _: &Self) {
+    -> "Dog"
 }
 end
 end scope
@@ -147,11 +169,15 @@ impl[cat] animal =
 fn sound(obj _: &Self) {
     -> "meow"
 }
+
+fn name(obj _: &Self) {
+    -> "Cat"
+}
 end
 end scope
 
 fn animal_sound(obj animal: !animal) {
-    printf("Animal makes this sound: $(animal.sound())")
+    printf("$(animal.name())s makes this sound $(animal.sound())")
 }
 
 fn main {
@@ -188,6 +214,14 @@ fn sum(obj ..args: ui4) ui4 apply variadics(args).size gt 2 {
     }
     -> result
 }
+
+import marco std:printf
+
+fn main {
+    obj sum = sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    
+    printf("$(sum)=") >! Prints `sum = 55`
+}
 ```
 
 - Type constructors example
@@ -201,23 +235,107 @@ end
 
 import type std:(arrayList, maybe)
 
->! ArrayList implementing functors
+>! Type constructor arrayList implementing functors
 scope @arrayList[type T] =
 impl[arrayList] functor[T] =
-fn fmap[type (B, Fn)](obj (self: arrayList[T], fcn: Fn)) Self[B] apply @Fn impls fn(T)B {
+fn fmap[type (B, Fn)](obj (self: arrayList[T], fcn: Fn)) Self[B] apply _ {
     -> self.map(fcn)
 }
 end
 end scope
 
->! maybe implementing functors
+>! Type constructor maybe implementing functors
 scope @maybe[type T] =
 impl[maybe] functor[T] =
-fn fmap[type (B, Fn)](obj (self: maybe[T], fcn: Fn)) Self[B] apply @Fn impls fn(T)B {
+fn fmap[type (B, Fn)](obj (self: maybe[T], fcn: Fn)) Self[B] apply _ {
     -> self => some {
         obj: maybe(some)
     }else
 }
 end
+end scope
+
+fn do_something[type (T, U)](obj x: T) U apply @T impls functor[ui4] {
+    x.fmap(fn(obj a: ui4){ -> a.to_string(.base= 21) })
+}
+
+fn main {
+    obj maybe_age: maybe(56)
+    obj age_list = arrayList[21, 34, 56, 34, 23, 8]
+    
+    do_something(maybe_age)
+    do_something(age_list)
+}
+```
+
+- Value argument list generators and static arrays example
+
+```rust
+import marco std:printf
+
+fn main {
+    obj static_array: arr[ui4]!(1024)
+    
+    >! Delay initialization 
+    static_array := arr[->> for x in 1~1024 {x + 3}]
+    
+    >! Essentially results in "arr[1+3, 2+3, 3+3, ..., 1024+3]"
+}
+```
+
+- Matrix and vector implementation using static arrays example
+
+```rust
+import marco std:printf
+
+fn main {
+    >! Matrix
+    obj _ = obj: matrix([[3.0, 4.0], [3.0, 4.0]]) >! Using object constructors
+    obj _ = matrix[[3.0, 4.0], [3.0, 4.0]] >! Using collection expressions
+    
+    >! Vector
+    obj _ = obj: vector([2.0, 3.0]) >! Using object constructors (2d vectors)
+    obj _ = vector[2.0, 3.0] >! Using collection expressions (2d vectors)
+    obj add_result = vector[2.0, 3.0, 9.0] + vector[5.0, 6.0, 1.0]
+    
+    printf("$(add_result)=") >! Prints "add_result = [7.0, 9.0, 10.0]"
+    
+    obj _ = r"2d vector_request"(vector[3.9, 0.5])
+    
+    fn r"2d vector_request"(obj x: vector!(2)) {
+        printf("Request 2d vector $(x)= & $(y)=")
+        >! Prints "Request 2d vector x = {} & y = {}"
+    }
+}
+
+<'------------------------matrix------------------------'>
+unique matrix!(obj (row, column): ui) = arr[
+    arr[r4]!(column)
+]!(row)
+
+scope @matrix!(obj (row, column): ui) =
+marco 'collectionExp(matrix) (obj ..args: arr[r4]!(column))
+matrix!(variadic(args).size, column) {
+    -> obj: matrix(['at:unpack args])
+}
+end scope
+
+<'------------------------vector------------------------'>
+>! A vector implementation that supports only 2 and 3 dimensions only
+
+unique vector!(obj dimensions: ui) apply dimensions eq 2 or eq 3 = arr[r4]!(dimensions)
+
+scope @vector!(obj dimensions: ui) =
+marco 'collectionExp(vector) (obj ..args: r4) vector!(variadic(args).size)
+apply variadic(args).size eq 2 or eq 3 {
+    -> obj: vector(['at:unpack args])
+}
+
+marco 'operator+(obj (lhs, rhs): vector!(dimensions)) {
+    >! Using value argument list generator entry(->>)
+    -> obj: vector(->> for i in 1~dimensions { lhs.[i] + rhs.[i] })
+}
+
+impl display;
 end scope
 ```
