@@ -1,6 +1,6 @@
 # NcLang
 
-Nc programming language or informally called ncLang is a next generation constraint based strongly typed programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
+Nc programming language or informally called ncLang is a next generation constraint based strongly typed memory safe programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
 
 It is a language that is designed from its infancy to accommodate every known area of programming and also, importantly, make the programmer's experience near equal or comparable to programming languages designed for those known areas. The language does this by centralizing specific functionalities of those areas of programming and allowing the programmer to only use them when programming for those areas. An example of said functionality would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, scripting programming language and many more(Although it cannot be used as a data language, that is **JSON** or **XML**, nc data representation language already serves such purpose and is natively integrated in nc programming language).
 
@@ -32,7 +32,6 @@ The following describes some of the many features of the nc programming language
 - Semantic type creators (Similar to derived types in Ada but with added semantics)
 - Semantic ranged integer type creators (Similar to Integers in Ada)
 - Value definition type creators (Similar to enum classes in C++)
-- Type constructors (Similar in concept to Higher Kinded Types in Haskell but limited in semantics to keep it simple)
 - Value semantics:
   - Move value semantics (Non destructive move unlike in rust and like in C++)
   - Copy value semantics
@@ -53,7 +52,8 @@ The following describes some of the many features of the nc programming language
 - Access restriction semantics (Controls the visibility of language items)
 - Import system
 - Compile time polymorphism:
-  - Type parameters (Basically generics in some programming languages and parametric polymorphism in programming)
+  - Type parameters (parametric polymorphism in programming or colloquially known as generics) that support generic typing
+    - Type constructor type parameter (Similar in concept to Higher Kinded Types in Haskell but limited in semantics to keep it simple)
   - Compile time value parameters (Basically the value parameter version of type parameters, can be seen in parametric polymorphism implementation in languages like Rust and C++)
 - Run time polymorphism:
   - Contract types (Basically impl types in Rust but with a significantly different implementation)
@@ -88,12 +88,18 @@ The following describes some of the many features of the nc programming language
 - Scope definitions (Similar in concept to namespaces in C++)
 - Run time type introspection
 - Value unpacking (Similar to structured binding in C++ but way more expressive and robust)
+- 1-based indexing (Subjectively better than 0-based indexing for me)
 - Foreign interface
 - Platform agnostic computing
+- Whitespace decisive parsing
 - Well defined language semantics
 - Excellent compiler error messages called error logs
 
 ## NcLang Examples
+
+Due to ncLang not having syntax highlighting yet in the code format section of markdown, the rust programming language is selected as the programming language to use its syntax highlighting because it is the only language included that remotely resembles ncLang syntax, therefore enables the syntax highlighting of a few. It is for this same reason that ncLang discard and document single-line comment contents (`>!` & `>:`)  are enclosed with double quotes to prevent syntax highlighting, since the comments syntax are different than rust's.
+
+
 
 - Hello world example
 
@@ -109,14 +115,10 @@ fn main {
 
 ```rust
 fn main {
-    obj r"I love 🧸s" = true
-    obj r:for = true
-    obj r"(✈️ 🏢)Historical event?" = true
-    obj r:struct = true
-    
-    must_use_identifiers(r"I love 🧸s", r:for, r"(✈️ 🏢)Historical event?", r:struct)
-    
-    fn must_use_identifiers(obj (_, _, _, _): bool) {}
+    obj r"Do you love 🧸s?" = true
+    obj r:for = "Damn! using the `for` language identifier as a user identifier"
+    obj r"Are you an ape(🦍)?" = true
+    obj r:struct = "Wow! using the `struct` language identifier as a user identifier"
 }
 ```
 
@@ -125,18 +127,18 @@ fn main {
 ```rust
 import type std:alloc:basic
 
-fn value_ref(obj _: &ui4, obj _: mut&ui4) {}
-fn memory_address_ref(obj _: *ui4, obj _: mut*ui4) {}
-fn alloc_memory_address_ref(obj alloc: {*}ui4) {
-    obj: alloc:basic[ui4].deallocate()
-}
-
 fn main {
     obj a: ui4()
     
     value_ref(&a, mut&a)
     memory_address_ref(addressof a, mut addressof a)
     alloc_memory_address_ref(obj: alloc:basic[ui4].allocate())
+}
+
+fn value_ref(obj _: &ui4, obj _: mut&ui4) {}
+fn memory_address_ref(obj _: *ui4, obj _: mut*ui4) {}
+fn alloc_memory_address_ref(obj alloc: {*}ui4) {
+    obj: alloc:basic[ui4].deallocate()
 }
 ```
 
@@ -146,11 +148,11 @@ fn main {
 import marco std:printf
 
 contract[type Self] animal =
-fn sound(obj self: &Self) &str
-fn name(obj self: &Self) &str
+fn sound(obj self: &Self) &str;
+fn name(obj self: &Self) &str;
 end
 
-struct (dog, cat)
+struct (dog, cat);
 
 scope @dog =
 impl[dog] animal =
@@ -220,22 +222,21 @@ import marco std:printf
 fn main {
     obj sum = sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     
-    printf("$(sum)=") >! Prints `sum = 55`
+    printf("$(sum)=") >! "Prints `sum = 55`"
 }
 ```
 
 - Type constructors example
 
 ```rust
->! Haskell functor: fmap :: f a -> (a -> b) -> f b
-
+>! "Haskell functor: fmap :: f a -> (a -> b) -> f b"
 contract[type Self[?]] functor[type A] =
 fn fmap[type (B, Fn)](obj (self: Self[A], fcn: Fn)) Self[B] apply @Fn impls fn(A)B
 end
 
 import type std:(arrayList, maybe)
 
->! Type constructor arrayList implementing functors
+>! "Type constructor arrayList implementing functors"
 scope @arrayList[type T] =
 impl[arrayList] functor[T] =
 fn fmap[type (B, Fn)](obj (self: arrayList[T], fcn: Fn)) Self[B] apply _ {
@@ -244,7 +245,7 @@ fn fmap[type (B, Fn)](obj (self: arrayList[T], fcn: Fn)) Self[B] apply _ {
 end
 end scope
 
->! Type constructor maybe implementing functors
+>! "Type constructor maybe implementing functors"
 scope @maybe[type T] =
 impl[maybe] functor[T] =
 fn fmap[type (B, Fn)](obj (self: maybe[T], fcn: Fn)) Self[B] apply _ {
@@ -268,7 +269,7 @@ fn main {
 }
 ```
 
-- Value argument list generators and static arrays example
+- Value argument list generators, collection expressions and static arrays example
 
 ```rust
 import marco std:printf
@@ -276,35 +277,43 @@ import marco std:printf
 fn main {
     obj static_array: arr[ui4]!(1024)
     
-    >! Delay initialization 
+    >! "Delay initialization "
     static_array := arr[->> for x in 1~1024 {x + 3}]
     
-    >! Essentially results in "arr[1+3, 2+3, 3+3, ..., 1024+3]"
+    >! "Essentially results in `arr[1+3, 2+3, 3+3, ..., 1024+3]`"
 }
 ```
 
-- Matrix and vector implementation using static arrays example
+- Matrix and vector implementation using static arrays and collection expressions example
 
 ```rust
 import marco std:printf
 
 fn main {
     >! Matrix
-    obj _ = obj: matrix([[3.0, 4.0], [3.0, 4.0]]) >! Using object constructors
-    obj _ = matrix[[3.0, 4.0], [3.0, 4.0]] >! Using collection expressions
+    obj _ = obj: matrix([[3.0, 4.0], [3.0, 4.0]]) >! "Using object constructors"
+    obj _ = matrix[[3.0, 4.0], [3.0, 4.0]] >! "Using collection expressions"
     
     >! Vector
-    obj _ = obj: vector([2.0, 3.0]) >! Using object constructors (2d vectors)
-    obj _ = vector[2.0, 3.0] >! Using collection expressions (2d vectors)
-    obj add_result = vector[2.0, 3.0, 9.0] + vector[5.0, 6.0, 1.0]
+    obj _ = obj: vector([2.0, 3.0]) >! "Using object constructors (2d vectors)"
+    obj _ = vector[2.0, 3.0] >! "Using collection expressions (2d vectors)"
     
-    printf("$(add_result)=") >! Prints "add_result = [7.0, 9.0, 10.0]"
+    obj vec3d_add_result = vector[2.0, 3.0, 9.0] + vector[5.0, 6.0, 1.0]
+    obj vec2d_add_result = vector[4.6, 9.1] + vector[3.0, 1.0]
     
-    obj _ = r"2d vector_request"(vector[3.9, 0.5])
+    printf("$(vec3d_add_result)=\n") >! "Prints `vec3d_add_result = [7.0, 9.0, 10.0]`"
+    printf("$(vec2d_add_result)=\n") >! "Prints `vec2d_add_result = [7.6, 10.1]`"
     
-    fn r"2d vector_request"(obj x: vector!(2)) {
-        printf("Request 2d vector $(x)= & $(y)=")
-        >! Prints "Request 2d vector x = {} & y = {}"
+    obj _ = vector2d_request(vector[3.9, 0.5])
+    obj _ = vector3d_request(vector[5.9, 5.9, 2.0])
+    
+    fn vector2d_request(obj x: vector!(2)) {
+        printf("Request 2d vector $(x.[1])= & $(x.[2])=\n")
+        >! "Prints `Request 2d vector x = {} & y = {}`"
+    }
+    fn vector3d_request(obj x: vector!(3)) {
+        printf("Request 2d vector $(x.[1])= & $(x.[2])=\n")
+        >! "Prints `Request 2d vector x = {} & y = {}`"
     }
 }
 
@@ -314,28 +323,64 @@ unique matrix!(obj (row, column): ui) = arr[
 ]!(row)
 
 scope @matrix!(obj (row, column): ui) =
-marco 'collectionExp(matrix) (obj ..args: arr[r4]!(column))
-matrix!(variadic(args).size, column) {
+marco 'collectionExp(matrix) (obj ..args: arr[r4]!(column)) matrix!(variadic(args).size, column) {
     -> obj: matrix(['at:unpack args])
 }
 end scope
 
 <'------------------------vector------------------------'>
->! A vector implementation that supports only 2 and 3 dimensions only
+>! "A vector implementation that supports only 2 and 3 dimensions haha"
 
 unique vector!(obj dimensions: ui) apply dimensions eq 2 or eq 3 = arr[r4]!(dimensions)
 
 scope @vector!(obj dimensions: ui) =
-marco 'collectionExp(vector) (obj ..args: r4) vector!(variadic(args).size)
-apply variadic(args).size eq 2 or eq 3 {
+marco 'misc:collectionExp(vector) (obj ..args: r4) vector!(variadic(args).size) apply variadic(args).size eq 2 or eq 3 {
     -> obj: vector(['at:unpack args])
 }
 
-marco 'operator+(obj (lhs, rhs): vector!(dimensions)) {
-    >! Using value argument list generator entry(->>)
+marco 'misc:operator+(obj (lhs, rhs): vector!(dimensions)) {
+    >! "Using value argument list generator entry(->>)"
     -> obj: vector(->> for i in 1~dimensions { lhs.[i] + rhs.[i] })
 }
 
-impl display;
+>! "The `use` keyword imports type properties of the uniqued type which is a static array in this case"
+use 'misc:operator .[] >! "For (1-based)indexing"
+use impl display >! "For printing values in a displayable format"
+
 end scope
 ```
+
+- Run time type introspection example
+
+```rust
+import marco std:printf
+
+fn main {
+	obj person_struct = 'exp:getTypeCreatorMetadata[person, array]()
+    
+    printf("TypeCreator [$(person_struct.kind)]\nType [$(person_struct.typeName)]\n")
+    
+    person_struct => fieldInfoList {
+        obj fieldInfoListIter = &fieldInfoList.iter()
+    	
+        >! "Extract the first element out of the iterator"
+        fieldInfoListIter.next() => some(fieldInfo) {
+        	printf("AndFields [$(fieldInfo)")
+        }else {}
+        
+        for fieldInfo in fieldInfoListIter {
+            printf(", $(fieldInfo)")
+        }
+        printf("]\n")
+    }else {}
+    
+    >! "Prints:" 
+    >! "TypeCreator [struct]"
+    >! "Type [person]"
+    >! "AndFields [name:&str, age:ui1, location:location]"
+}
+
+struct person = obj (name: &str, age: ui1, location: location)
+struct location = obj (longitude, latitude): r4
+```
+
