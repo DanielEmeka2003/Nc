@@ -152,6 +152,53 @@ fn alloc_memory_address_ref(obj alloc: {*}ui4) {
 }
 ```
 
+- Sum type creator example
+
+```rust
+import type std:string
+import marco std:printf
+
+union realNumber = obj (real4: r4, real8: real8)
+
+fn main {
+    obj realNum: realNumber()
+    
+    realNum => real4 {
+        printf("$(real4)=\n")
+    }|real8 {
+        printf("$(real8)=\n")
+    }
+}
+```
+
+- Value Unpacking examples
+
+```rust
+import type std:string
+import marco std:printf
+
+struct product = obj (name: string, id: ui8, amount: ui4)
+
+scope @product =
+>! "The parameter uses value unpacking"
+fn display(obj {name, id, amount}: &product) {
+    printf("\
+    		Product name	= [$(name)]\
+        	Product id		= [$(id)]\
+        	Product amount	= [$(amount)]\n\
+    ")
+}
+end scope
+
+fn main {
+    obj bicycle: product("Bicycle", 100₂₈, 102)
+    
+    &bicycle.display()
+}
+
+>! "Value unpacking can also be applied to and-fields(objects in struct) and normal objects too"
+```
+
 - Contract and impl with runtime polymorhism example
 
 ```rust
