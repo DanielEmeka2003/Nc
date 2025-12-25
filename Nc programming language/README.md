@@ -1,18 +1,19 @@
-# NcLang
+# Nc Programming Language
 
-Nc programming language or informally called ncLang is a next generation constraint based strongly typed memory safe programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
+Nc programming language or informally called NPL is a next generation invasive constraint based strongly typed memory safe programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
 
-It is a language that is designed from its infancy to accommodate every known area of programming and also, importantly, make the programmer's experience near equal or comparable to programming languages designed for those known areas. The language does this by centralizing specific functionalities of those areas of programming and allowing the programmer to only use them when programming for those areas. An example of said functionality would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, scripting programming language and many more(Although it cannot be used as a data language, that is **JSON** or **XML**, nc data representation language already serves such purpose and is natively integrated in nc programming language).
+It is a language that is designed from its infancy to accommodate every known area of programming and also, importantly, make a programmer's experience near equal or comparable to programming languages specifically designed for those known areas. The language does this by centralizing specific functionalities of those areas of programming thereby making itself aware of the various programming areas then dictates when a programmer can use said functionalities. An example of said functionality would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, game design programming language, embedded systems programming language, scripting programming language and many more(Although it cannot be used as a data language, that is **JSON** or **XML**, nc data representation language already serves such purpose and is natively integrated in nc programming language).
 
-It is essentially a platform aware language and it is for this reason the I call the language a **TGPL**(Truly General Purpose Programming Language).
+It is essentially an programming area aware language and it is for this reason I call the language a **TGPL**(Truly General Purpose Programming Language).
 
-## NcLang Features
+## Nc Programming Language Features
 
 The following describes some of the many features of the nc programming language:
 
 - Positional base number entry from bases 2 to 36 (For both integer and real numbers)
-- Raw user language identifier entry
-- Raw user string identifier entry
+- Raw user identifier entry
+  - Raw user language identifier entry
+  - Raw user string identifier entry
 - Discard and document comments
 - Character entry
 - Multi-line string entry
@@ -23,17 +24,20 @@ The following describes some of the many features of the nc programming language
 - IEEE-745 binary floating point numbers (Reluctantly added)
 - Nc real numbers (A custom decimal floating point implementation native to the language)
 - Strongly typed language
+- No implicit conversions and no sub-typing
 - Highly expressive type system
 - Stack array type(An array data structure that only uses the stack memory space invented just for the language)
 - Static array type
 - Integer range types
+- Failure handling types
+- Zero sized types
 - Product type creators (Similar to structs in C and Rust)
 - Sum type creators (Similar to enums in Rust and unions in C and C++)
 - Semantic type creators (Similar to derived types in Ada but with added semantics)
 - Semantic ranged integer type creators (Similar to Integers in Ada)
 - Value definition type creators (Similar to enum classes in C++)
 - Value semantics:
-  - Move value semantics (Non destructive move unlike in rust and like in C++)
+  - Move value semantics (Destructive move semantics)
   - Copy value semantics
 - Functions
 - Marcos (Inlined functions devoid of value semantics)
@@ -45,7 +49,7 @@ The following describes some of the many features of the nc programming language
   - For iterator loop (Similar to for loops in the Rust programming language)
   - While loop (Similar to for loops in the C and C++ programming languages)
 - Interfaces via Contract and impl (Similar to trait and impls in Rust)
-- Language defined generic string interface
+- Language defined generic unicode string interface that supports extensive unicode functionalities
 - Robust compile time evaluation semantics
 - Explicit and implicit default value argument entry
 - Value argument list generators (Allows value list generation in any value argument entry)
@@ -81,25 +85,25 @@ The following describes some of the many features of the nc programming language
   - Or-field query conditional expression (A more robust form of pattern matching expression in functional languages and Rust)
 - References:
   - Value references (Similar in concept to references in C++ and Rust)
+    - Non allocating value references
+    - Allocating value references
   - Memory address references (Similar in concept to pointers in C and C++):
-    - Non allocating memory address references (Basically raw pointers in C and C++)
-    - Allocating memory address references (Higher form of smart pointers in C++)
+    - Non allocating memory address references
+    - Allocating memory address references
 - Implicit lifetime semantics (Similar in concept to explicit lifetime parameters in rust)
 - Scope definitions (Similar in concept to namespaces in C++)
-- Run time type introspection
+- Type creator introspection
 - Value unpacking (Similar to structured binding in C++ but way more expressive and robust)
 - 1-based indexing (Subjectively better than 0-based indexing for me)
 - Foreign interface
 - Platform agnostic computing
-- Whitespace decisive parsing
+- Whitespace decisive synparsing
 - Well defined language semantics
 - Excellent compiler error messages called error logs
 
-## NcLang Examples
+## Nc Programming Language Examples
 
-Due to ncLang not having syntax highlighting yet in the code format section of markdown, the rust programming language is selected as the programming language to use its syntax highlighting because it is the only language included that remotely resembles ncLang syntax, therefore enables the syntax highlighting of a few. It is for this same reason that ncLang discard and document single-line comment contents (`>!` & `>:`)  are enclosed with double quotes to prevent syntax highlighting, since the comments syntax are different than rust's.
-
-
+Due to NPL not having syntax highlighting yet in the code format section of markdown, the rust programming language is selected as the programming language to use its syntax highlighting because it is the only language included that remotely resembles NPL syntax, therefore enables the syntax highlighting of a few. It is for this same reason that NPL discard and document single-line comment contents (`>!` & `>:`)  are enclosed with double quotes to prevent syntax highlighting, since the comments syntax are different than rust's.
 
 - Hello world example
 
@@ -115,10 +119,10 @@ fn main {
 
 ```rust
 fn main {
-    obj r"Do you love 🧸s?" = true
-    obj r:for = "Damn! using the `for` language identifier as a user identifier"
-    obj r"Are you an ape(🦍)?" = true
-    obj r:struct = "Wow! using the `struct` language identifier as a user identifier"
+    obj _ r"Do you love 🧸s?" = true
+    obj _ r:for = "Damn! using the `for` language identifier as a user identifier"
+    obj _ r"Are you an ape(🦍)?" = true
+    obj _ r:struct = "Wow! using the `struct` language identifier as a user identifier"
 }
 ```
 
@@ -132,13 +136,19 @@ fn main {
     
     value_ref(&a, mut&a)
     memory_address_ref(addressof a, mut addressof a)
-    alloc_memory_address_ref(obj: alloc:basic[ui4].allocate())
+    
+    alloc_value_ref(obj: allocator:basic[ui4].allocate())
+    alloc_memory_address_ref(obj: allocator:basic[ui4].allocate())
 }
 
 fn value_ref(obj _: &ui4, obj _: mut&ui4) {}
 fn memory_address_ref(obj _: *ui4, obj _: mut*ui4) {}
+
+fn alloc_value_ref(obj alloc: {&}ui4) {
+    obj: allocator:basic[ui4].deallocate(alloc)
+}
 fn alloc_memory_address_ref(obj alloc: {*}ui4) {
-    obj: alloc:basic[ui4].deallocate()
+    obj: allocator:basic[ui4].deallocate(alloc)
 }
 ```
 
@@ -156,24 +166,24 @@ struct (dog, cat);
 
 scope @dog =
 impl[dog] animal =
-fn sound(obj _: &Self) {
-    -> "woof"
+fn sound(obj _: &Self) &str {
+    "woof"
 }
 
-fn name(obj _: &Self) {
-    -> "Dog"
+fn name(obj _: &Self) &str {
+    "Dog"
 }
 end
 end scope
 
 scope @cat =
 impl[cat] animal =
-fn sound(obj _: &Self) {
-    -> "meow"
+fn sound(obj _: &Self) &str {
+    "meow"
 }
 
-fn name(obj _: &Self) {
-    -> "Cat"
+fn name(obj _: &Self) &str {
+    "Cat"
 }
 end
 end scope
@@ -195,13 +205,13 @@ fn main {
 ```rust
 import type std:string
 
-marco add[type T](obj (lhs, rhs): T) T apply @T eq string or ui4 {
-    -> lhs + rhs
+marco add[type T](obj (lhs, rhs): T) T apply @T eq string or eq @ui4 {
+    lhs + rhs
 }
 
 fn main {
-    obj _ = add(34, 45)
-    obj _ = add(string"Daniel", string" Emeka")
+    obj _ = add(34, 45) >! "result = `79`"
+    obj _ = add(string"Daniel", string" Emeka") >! "result = `Daniel Emeka`"
 }
 ```
 
@@ -214,7 +224,8 @@ fn sum(obj ..args: ui4) ui4 apply variadics(args).size gt 2 {
     for arg in variadics(args) {
         result += arg
     }
-    -> result
+    
+    result
 }
 
 import marco std:printf
@@ -231,7 +242,7 @@ fn main {
 ```rust
 >! "Haskell functor: fmap :: f a -> (a -> b) -> f b"
 contract[type Self[?]] functor[type A] =
-fn fmap[type (B, Fn)](obj (self: Self[A], fcn: Fn)) Self[B] apply @Fn impls fn(A)B
+fn fmap[type (B, Fn)](obj (self: Self[A], fcn: Fn)) Self[B] apply @Fn impls fn(A)B;
 end
 
 import type std:(arrayList, maybe)
@@ -240,7 +251,7 @@ import type std:(arrayList, maybe)
 scope @arrayList[type T] =
 impl[arrayList] functor[T] =
 fn fmap[type (B, Fn)](obj (self: arrayList[T], fcn: Fn)) Self[B] apply _ {
-    -> self.map(fcn)
+    self.map(fcn)
 }
 end
 end scope
@@ -249,7 +260,7 @@ end scope
 scope @maybe[type T] =
 impl[maybe] functor[T] =
 fn fmap[type (B, Fn)](obj (self: maybe[T], fcn: Fn)) Self[B] apply _ {
-    -> self => some {
+    self => some {
         obj: maybe(some)
     }else
 }
@@ -257,7 +268,7 @@ end
 end scope
 
 fn do_something[type (T, U)](obj x: T) U apply @T impls functor[ui4] {
-    x.fmap(fn(obj a: ui4){ -> a.to_string(.base= 21) })
+    x.fmap(fn(obj n){ -> n.to_string(.base= 21) })
 }
 
 fn main {
@@ -290,11 +301,11 @@ fn main {
 import marco std:printf
 
 fn main {
-    >! Matrix
+    >! "Matrix"
     obj _ = obj: matrix([[3.0, 4.0], [3.0, 4.0]]) >! "Using object constructors"
     obj _ = matrix[[3.0, 4.0], [3.0, 4.0]] >! "Using collection expressions"
     
-    >! Vector
+    >! "Vector"
     obj _ = obj: vector([2.0, 3.0]) >! "Using object constructors (2d vectors)"
     obj _ = vector[2.0, 3.0] >! "Using collection expressions (2d vectors)"
     
@@ -324,7 +335,7 @@ unique matrix!(obj (row, column): ui) = arr[
 
 scope @matrix!(obj (row, column): ui) =
 marco 'collectionExp(matrix) (obj ..args: arr[r4]!(column)) matrix!(variadic(args).size, column) {
-    -> obj: matrix(['at:unpack args])
+    obj: matrix(['at:unpack args])
 }
 end scope
 
@@ -334,17 +345,17 @@ end scope
 unique vector!(obj dimensions: ui) apply dimensions eq 2 or eq 3 = arr[r4]!(dimensions)
 
 scope @vector!(obj dimensions: ui) =
-marco 'misc:collectionExp(vector) (obj ..args: r4) vector!(variadic(args).size) apply variadic(args).size eq 2 or eq 3 {
-    -> obj: vector(['at:unpack args])
+marco misc:collectionExp(vector) (obj ..args: r4) vector!(variadic(args).size) apply variadic(args).size eq 2 or eq 3 {
+    obj: vector(['at:unpack args])
 }
 
-marco 'misc:operator+(obj (lhs, rhs): vector!(dimensions)) {
+marco misc:operator+(obj (lhs, rhs): vector!(dimensions)) vector!(dimensions) {
     >! "Using value argument list generator entry(->>)"
-    -> obj: vector(->> for i in 1~dimensions { lhs.[i] + rhs.[i] })
+    obj: vector(->> for i in 1~dimensions { lhs.[i] + rhs.[i] })
 }
 
 >! "The `use` keyword imports type properties of the uniqued type which is a static array in this case"
-use 'misc:operator .[] >! "For (1-based)indexing"
+use marco misc:operator.[] >! "For (1-based)indexing"
 use impl display >! "For printing values in a displayable format"
 
 end scope
@@ -356,13 +367,13 @@ end scope
 import marco std:printf
 
 fn main {
-	obj person_struct = 'exp:getTypeCreatorMetadata[person, array]()
-    
+	obj person_struct = exp:getTypeCreatorMetadata[person, array]()
+
     printf("TypeCreator [$(person_struct.kind)]\nType [$(person_struct.typeName)]\n")
     
     person_struct => fieldInfoList {
         obj fieldInfoListIter = &fieldInfoList.iter()
-    	
+
         >! "Extract the first element out of the iterator"
         fieldInfoListIter.next() => some(fieldInfo) {
         	printf("AndFields [$(fieldInfo)")
@@ -383,4 +394,3 @@ fn main {
 struct person = obj (name: &str, age: ui1, location: location)
 struct location = obj (longitude, latitude): r4
 ```
-
