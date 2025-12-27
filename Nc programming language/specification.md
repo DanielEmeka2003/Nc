@@ -595,13 +595,13 @@ fileContent = (object|function|marco|scope|import|contract|typeCreator)*
 
 Below is the type syntax written in NTPL:
 
-```json
+```c++
 type($1:bool = true) = basicType($1)|functionType|contractType|valueReference|memoryAddressReferenceType|typeLCI|typeFromExpression
 ```
 
 Auxiliary syntaxes for types syntax written in NTPL:
 
-```json
+```c++
 basicType($1:bool) = scopedIdentifier typeArgumentEntry($1)? comptimeValueArgumentEntry?
 
 functionType = 'fn' '(' list(type) ')' type|'!'
@@ -619,7 +619,7 @@ typeFromExpression = '[' expression ']'
 
 Below are the objects syntax written in NTPL:
 
-```json
+```c++
 object = 'obj' mainObjectPart1|mainObjectPart2|objectGrouping
 
 valueParameter = 'obj' basicValueParameter|variadicValueParameter|valueParameterGrouping
@@ -631,7 +631,7 @@ field($1:bool) = 'obj' fieldPart1|fieldPart2($1)|fieldGrouping
 
 Auxiliary syntaxes for objects syntax written in NTPL:
 
-```json
+```c++
 directInit = valueArgumentEntry
 
 indirectInit = '=' expression
@@ -685,7 +685,7 @@ variadicTypeParameter = 'type' '..' userIdentifierToken
 
 Below are the arguments entry syntax written in NTPL:
 
-```json
+```c++
 valueArgumentEntry = '('list(valueArgument)')'
 
 comptimeValueArgumentEntry = '!'.'('list(valueArgument)')'
@@ -695,7 +695,7 @@ typeArgumentEntry($1:bool) = '[' list(typeArgument($1)) ']'
 
 Auxiliary syntaxes for arguments entry syntax: written in NTPL
 
-```json
+```c++
 valueArgument = expression|parameterValueArgument|valueArgumentListGenerator|expressionCodeArgument|'_'
 
 parameterValueArgument = '.'userIdentifierToken '=' expression
@@ -719,7 +719,7 @@ typeArgument($1:bool) = attributeLCI? if $1: (type ('/'userIdentifierToken)?)|('
 
 Below is the constraint application syntax written in NTPL:
 
-```json
+```c++
 constraintApplication = 'apply' logicalBinaryExpression|'_'
 ```
 
@@ -733,7 +733,7 @@ function = 'fn' captureSpace? functionIdentifier valueParameterEntry? returnEntr
 
 Auxiliary syntaxes for function syntax written in NTPL:
 
-```json
+```c++
 caputreSpace = '|'list(expression|(userIdentifierToken '=' expressions))'|'
 
 returnEntry = type|'type'|'!'
@@ -745,13 +745,13 @@ functionIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParam
 
 Below is the marco syntax written in NTPL:
 
-```json
+```c++
 marco = 'marco' marcoIdentifier valueParameterEntry? returnEntry? constraintApplication? block|';'
 ```
 
 Auxiliary syntaxes for marco syntax written in NTPL:
 
-```json
+```c++
 marcoIdentifier = userIdentifierToken|miscLCI|operator|grouping(userIdentifierToken|miscLCI|operator) typeParameterEntry? comptimeValueParameterEntry?
 
 operator = 'operator' operator
@@ -763,7 +763,7 @@ operator = [todo]
 
 Below are the type-creators syntax written in NTPL:
 
-```json
+```c++
 typeCreator = structTypeCreator|unionTypeCreator|valueDefCreator|uniqueTypeCreator
 
 structTypeCreator = 'struct' genericTypeCreatorIdentifier constraintApplication? ( '=' list(field(true)) )|';'
@@ -779,7 +779,7 @@ uniqueTypeCreator = 'unique' genericTypeCreatorIdentifier constraintApplication?
 
 Auxiliary syntaxes for type creators syntax written in NTPL:
 
-```json
+```c++
 genericTypeCreatorIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
 
 uniqueTypeCreatorRangeEntry = 'from' integerNumberLiteralToken'~'integerNumberLiteralToken
@@ -789,7 +789,7 @@ uniqueTypeCreatorRangeEntry = 'from' integerNumberLiteralToken'~'integerNumberLi
 
 Below is the contract syntax written in NTPL:
 
-```json
+```c++
 contract = 'contract' typeParameterEntry contractIdentifier contractInheritancePart? constraintApplication? contractBody
 ```
 
@@ -809,7 +809,7 @@ contractInheritancePart = ':' list(userIdentifierToken, '+')
 
 Below is the impl syntax written in NTPL:
 
-```json
+```c++
 impl = 'impl' typeArgumentEntry? implIdentifier constraintApplication? implBody|';'
 ```
 
@@ -827,7 +827,7 @@ implBody = '=' (implContentPart|import)+ 'end'
 
 Below is the scope syntax written in NTPL:
 
-```json
+```c++
 scope = 'scope' scopeIdentifier constraintApplication? scopeBody
 ```
 
@@ -877,7 +877,7 @@ primaryExpression = collectionExpression|(':'? scopedIdentifier)|'variadic'|expr
 
 Auxiliary syntaxes for expressions syntax written in NTPL:
 
-```json
+```c++
 assignmentBinaryOperator = '='|':='|'+='|'-='|'*='|'/='|'%='|'^='|'=-'|'=/'|'=%'
 
 logicalBinaryOperator = 'not'? 'and'|'or'|'xor'
@@ -939,19 +939,19 @@ The reason as to why it is setup this way was born out of convenience and that c
 
 `dorBinaryExpression` has a certain ambiguity to it, here is the syntax:
 
-```json
+```c++
 unaryPrefixExpression unaryPostfixOperator* ('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
 ```
 
 The ambiguity lies in the precedence level of the dot operator and the `unaryPostfixOperator`. It is an ambiguity because merely looking at the syntax is not enough to accurately decipher the precedence levels of the two operators. Below is the explanation to eliminate the ambiguity:
 
-```json
+```c++
 unaryPrefixExpression unaryPostfixOperator*
 ```
 
 The above unequivocally parses for the `unaryPrefixExpression` first which has the higher precedence level, then parses for the `unaryPostfixOperator` which has a lower precedence level than the postfix expression.
 
-```json
+```c++
 ('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
 ```
 
@@ -1150,13 +1150,13 @@ This is done to centralize the programming style of brace writing when it comes 
 
 Below is the statement syntax written in NTPL:
 
-```json
+```c++
 statement = loopStatement|jumpStatement
 ```
 
 Auxiliary syntaxes for statement syntax written in NTPL:
 
-```json
+```c++
 jumpStatement = '->' blockId? 'break'|'continue'|expression
 
 loopStatement = attributeLCI? forLoopStatement|whileLoopStatement
@@ -1170,7 +1170,7 @@ whileLoopStatement = 'while' (list((attributeLCI? object)) ';')? expression? (';
 
 Below are the LCIs syntax written in NTPL:
 
-```json
+```c++
 attributeLCI = 'at'.':'.(attributeLCIPart|grouping(atrributeLCIPart))
 
 expressionLCI = 'exp'.':'.(userIdentifierToken|grouping(userIdentifierToken))
@@ -1182,7 +1182,7 @@ miscLCI = 'misc'.':'.(userIdentifierToken valueArgumentEntry)
 
 Auxiliary syntaxes for LCI syntax written in NTPL:
 
-```json
+```c++
 attributeLCIPart = userIdentifierToken valueArgumentEntry?
 ```
 
@@ -1198,13 +1198,13 @@ import = 'import' 'mod'|'pkg'|'lib'|'type'|'scope'|'fn'|'marco'|'contract'|'obj'
 
 Below is the use syntax written in NTPL:
 
-```json
+```c++
 use = 'use' ('impl'|'fn'|'obj'|'field'|'scope' userIdentifierToken|grouping(userIdentifierToken))|useForMarco|'*'
 ```
 
 Auxiliary syntaxes for use syntax written in NTPL:
 
-```json
+```c++
 useForMarco = 'marco' userIdentifierToken|miscLCI|grouping(userIdentifierToken|miscLCI)
 ```
 
@@ -1212,7 +1212,7 @@ useForMarco = 'marco' userIdentifierToken|miscLCI|grouping(userIdentifierToken|m
 
 Below are the groupings syntax written in NTPL:
 
-```json
+```c++
 grouping($1:exp) = '(' list($1, _, `{2,}`) ')'
 
 scopeIdentifierGrouping = '('scopeGroupingIdentifierEntryPart1|scopeGroupingIdentifierEntryPart2')'
@@ -1228,7 +1228,7 @@ fieldGrouping = '..'? 'mut'? '(' list(fieldPart1|fieldPart2, _, `{2,}`) ')' (':'
 
 Auxiliary syntaxes for groupings syntax written in NTPL:
 
-```json
+```c++
 scopeIdentifierGroupingPart1 = grouping(userIdentifierToken)
 
 scopeIdentifierGroupingPart2 = '@' grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
