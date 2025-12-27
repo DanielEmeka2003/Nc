@@ -2,7 +2,7 @@
 
 This document defines the formal specifications of the nc programming language, the specification that would be used to write the compiler and interpreter of the nc programming language. As inferred from the previous statement, nc programming language is built to work for both compilation and an odd form of interpretation which would be discussed at length in this document. Unlike most formal specifications, this document is written in a beginner friendly way to facilitate faster understanding of the document for persons that have met the criteria of possessing rudimentary knowledge in programming concepts, NTPL and compiler development.
 
-It is encouraged to read this specification document using a dedicated markdown editor or viewer like **Typora** (_what I use to write this specification document with the only downside being the code section has no setting to turn off code wrapping_) other than to read this specification document on github, because it honestly looks ugly on github with the added weird red text highlighting of **JSON** code (_I use both **C++** and **JSON** for the syntax highlighting of NTPL expression texts because it doesn't yet have it's on syntax highlighting_) and the choice of font for the code section.
+It is encouraged to read this specification document using a dedicated markdown editor or viewer like **Typora** (_what I use to write this specification document with the only downside being the code section has no setting to turn off code wrapping_) other than to read this specification document on github, because it honestly looks ugly on github. I also currently use C++ as the language of choice for the NTPL code sections.
 
 An example of the Typora interface:
 
@@ -473,7 +473,7 @@ Examples of the above format would be:
 
 Subsequently, the NTPL function of string text literal token is:
 
-```json
+```c++
 stringTextLiteralToken = formattedStringTextLiteralToken|unformattedStringTextLiteralToken
 ```
 
@@ -619,7 +619,7 @@ typeFromExpression = '[' expression ']'
 
 Below are the objects syntax written in NTPL:
 
-```c++
+```bash
 object = 'obj' mainObjectPart1|mainObjectPart2|objectGrouping
 
 valueParameter = 'obj' basicValueParameter|variadicValueParameter|valueParameterGrouping
@@ -631,7 +631,7 @@ field($1:bool) = 'obj' fieldPart1|fieldPart2($1)|fieldGrouping
 
 Auxiliary syntaxes for objects syntax written in NTPL:
 
-```c++
+```bash
 directInit = valueArgumentEntry
 
 indirectInit = '=' expression
@@ -847,7 +847,7 @@ typeScopeIdentifier = '@' userIdentifierToken typeParameterEntry? comptimeValueP
 
 Below are the expressions syntax written in NTPL:
 
-```json
+```c++
 expression = attributeLCI? assignmentBinaryExpression
 
 assignmentBinaryExpression = logicalBinaryExpression (assignmentBinaryOperator assignmentBinaryExpression)
