@@ -1,10 +1,10 @@
 # Nc Programming Language
 
-Nc programming language or informally called NPL is a next generation invasive constraint based strongly typed memory safe programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
+Nc programming language or informally called NPL is a next generation invasive constraint based, strongly typed, memory safe programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
 
-It is a language that is designed from its infancy to accommodate every known area of programming and also, importantly, make a programmer's experience near equal or comparable to programming languages specifically designed for those known areas. The language does this by centralizing specific functionalities of those areas of programming thereby making itself aware of the various programming areas then dictates when a programmer can use said functionalities. An example of said functionality would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, game design programming language, embedded systems programming language, scripting programming language and many more(Although it cannot be used as a data language, that is **JSON** or **XML**, nc data representation language already serves such purpose and is natively integrated in nc programming language).
+It is a language that is designed from its infancy to accommodate every known area of programming and also, importantly, make a programmer's experience near equal or comparable to programming languages specifically designed for those areas. The language does this by centralizing specific functionalities of those areas of programming thereby making itself aware of the various programming areas then dictates when a programmer can use said functionalities. An example of said functionality would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, game design programming language, embedded systems programming language, scripting programming language and many more (_although it cannot be used as a data language, that is **JSON** or **XML**, nc data representation language already serves such purpose and is natively integrated in nc programming language_).
 
-It is essentially an programming area aware language and it is for this reason I call the language a **TGPL**(Truly General Purpose Programming Language).
+It is essentially a programming area aware language and it is for this reason I call the programming language a **TGPL** (_Truly General Purpose Programming Language_).
 
 ## Nc Programming Language Features
 
@@ -91,13 +91,13 @@ The following describes some of the many features of the nc programming language
     - Non allocating memory address references
     - Allocating memory address references
 - Implicit lifetime semantics (Similar in concept to explicit lifetime parameters in rust)
-- Scope definitions (Similar in concept to namespaces in C++)
+- Scope definitions (Similar in concept to `namespaces` in C++)
 - Type creator introspection
 - Value unpacking (Similar to structured binding in C++ but way more expressive and robust)
 - 1-based indexing (Subjectively better than 0-based indexing for me)
 - Foreign interface
 - Platform agnostic computing
-- Whitespace decisive synparsing
+- White-space decisive parsing
 - Well defined language semantics
 - Excellent compiler error messages called error logs
 

@@ -2,7 +2,13 @@
 
 This document defines the formal specifications of the nc programming language, the specification that would be used to write the compiler and interpreter of the nc programming language. As inferred from the previous statement, nc programming language is built to work for both compilation and an odd form of interpretation which would be discussed at length in this document. Unlike most formal specifications, this document is written in a beginner friendly way to facilitate faster understanding of the document for persons that have met the criteria of possessing rudimentary knowledge in programming concepts, NTPL and compiler development.
 
-The official acronym of the programming language is **NPL** which stands for **<u>N</u>**c **<u>P</u>**rogramming **<u>L</u>**anguage - obviously - and the official source code file extension is `.npl`.
+It is encouraged to read this specification document using a dedicated markdown editor or viewer like **Typora** (_what I use to write this specification document with the only downside being the code section has no setting to turn off code wrapping_) other than to read this specification document on github, because it honestly looks ugly on github with the added weird red text highlighting of **JSON** code (_I use both **C++** and **JSON** for the syntax highlighting of NTPL expression texts because it doesn't yet have it's on syntax highlighting_) and the choice of font for the code section.
+
+An example of the Typora interface:
+
+![TyporaExample](/home/emekadaniel/Documents/Nc/Nc programming language/TyporaExample.png)
+
+The official acronym of the programming language is **NPL** which stands for **N**c **P**rogramming **L**anguage - obviously - and the official source code file extension is `.npl`.
 
 To describe the text representation of the nc programming language, nc's very own text processing language is used, called **nc text processing language**  and referred to as **NTPL** in this document. You are advised to read the tutorial for the text processing language before reading this document.
 
@@ -44,7 +50,7 @@ Based on the categories of comments, there are two type of discard comments, nam
 
 Below is the single-line discard comments syntax written in NTPL:
 
-```json
+```c++
 singleLineDiscardComment = '>! ' any*
 ```
 
@@ -60,7 +66,7 @@ Examples of the above syntax would be:
 
 Below is the multi-line discard comments syntax written in NTPL:
 
-```json
+```c++
 multiLineDiscardComment = '<\'' any* '\'>'
 ```
 
@@ -88,7 +94,7 @@ Based on the categories of comments, there are two types of document comments, n
 
 Below is the single-line document comment syntax written in NTPL:
 
-```json
+```c++
 singleLineDocumentComment = '>: ' any*
 ```
 
@@ -103,7 +109,7 @@ Examples of the above syntax would be:
 
 Below is the multi-line document comments syntax written in NTPL:
 
-```json
+```c++
 multiLineDocumentComment = '<"' .* '">'
 ```
 
@@ -133,7 +139,7 @@ There are 3 types of tokens, namely:
 
 Are tokens that make use of a set of unicode characters that can be combined to form text that depends on a *speaking* language and the context it is written in. Below is the basic identifier syntax written in NTPL:
 
-```json
+```c++
 basicIdentifierToken = '_'|Script ('_'|Script|'0'~'9')*
 ```
 
@@ -183,7 +189,7 @@ Are the set combination of unicode characters that are reserved for use by the l
 - `not`
 - `xor`
 - `mut`
-- `as`
+- `from`
 - `eq`
 - `lt`
 - `gt`
@@ -229,7 +235,7 @@ There are two types of raw user identifier tokens, namely:
 
 Are raw user identifier tokens that allow the entry of language identifiers as user identifiers. Below is the syntax written in NTPL:
 
-```json
+```c++
 rawLanguageIdentifierToken = 'r\''languageIdentifierToken
 ```
 
@@ -245,7 +251,7 @@ r'scope
 
 Are raw user identifier tokens that allow the entry of any unicode character to form an identifier, provided it does not form into a basic identifier token. Below is the syntax written in NTPL:
 
-```json
+```c++
 rawUserIdentifierToken = 'r'stringTextLiteralToken
 ```
 
@@ -273,7 +279,7 @@ Besides, anything else goes in a raw user string identifier token entry, a user 
 
 Subsequently, the NTPL function for identifier tokens is:
 
-```json
+```c++
 identifierToken = languageIdentifierToken|userIdentifierToken
 ```
 
@@ -292,8 +298,9 @@ There are two types of literal tokens, namely:
 
 Are tokens that allow the entry of numbers in NPL. Number literal tokens in NPL are positional numeral system numbers that support bases `2` to `36` and digit separators(`_`). Due to the fact that number literal tokens in NPL support bases `2` to `36`, unicode characters `A` to `Z` are valid digits. Detailed explanation of positional numeral system can be found in [**TODO: create a document to explain positional numeral systems**]. Below is the digits and base entry syntax written in NTPL:
 
-```json
+```c++
 digits = '0'~'9'|'A'~'Z'
+
 base = ₂~₃₆
 ```
 
@@ -308,7 +315,7 @@ There are two types of number literal tokens, namely:
 
 Are number literal tokens that allow the entry of whole numbers (_all digits including zero_). Below is the syntax written in NTPL:
 
-```json
+```c++
 integerNumberLiteralToken = '0'~'9' ('_'? digits)* base?
 ```
 
@@ -330,7 +337,7 @@ Are number literal tokens that allow the entry of rational numbers (_fractional 
 
 Real number literal tokens can either be written in either normal fractional number form `0.0003` or scientific notation form `3.0@-4` or `3@-4`. Because number literal tokens in NPL support bases `2` to `36`, the exponent base indicator is  `@` unicode character not the conventional `e` or `E` with the exponent base being the number after the exponent base indicator. Since the exponent base refers to the count of digits to move the fractional point by, the language only parses for base 10 digits as the exponent base which is then used to refer to the exact number of digits to move the fractional point by. Below is the real number literal token and exponent syntax written in NTPL:
 
-```json
+```c++
 realNumberLiteralToken = '0'~'9' ('_'? digit)* '.' digit ('_'? digit)* base? exponent?
 
 exponent = '@' '-'? '0'~'9'+
@@ -369,7 +376,7 @@ Are a set combination of unicode characters starting with `\` unicode character 
 
 - `r'\'unicode_character_codepoint` : allows the entry of unicode characters using their code-points
 
-  - ```json
+  - ```c++
     unicode_character_codepoint = '['integerNumberLiteralToken']'
     ```
 
@@ -379,7 +386,7 @@ Are a set combination of unicode characters starting with `\` unicode character 
 
 - `r'\'unicode_character_name` : allows the entry of unicode characters using their names
 
-  - ```json
+  - ```c++
     unicode_character_name = '{'basicIdentifierToken (' '|'-' basicIdentifierToken)*'}'
     ```
     
@@ -398,7 +405,7 @@ There are two types of text literal tokens, namely:
 
 Are text literal tokens that allow the entry of exactly one unicode character or text action that results in a unicode character. Below is the syntax written in NTPL:
 
-```json
+```c++
 characterTextLiteralToken = '\'' any|text_action '\''
 ```
 
@@ -427,7 +434,7 @@ Are text literal tokens that allow the entry of zero or more unicode characters.
 
 Are string text literal tokens that support the entry of text actions. Below is the syntax written in NTPL:
 
-```json
+```c++
 formattedStringTextLiteralToken = '"' (any|text_action)* '"'
 ```
 
@@ -448,7 +455,7 @@ some good 🐔
 
 Are string text literal tokens that do not support the entry of text actions, meaning text actions simply have no effect in the string text literal token. Below is the syntax written in NTPL:
 
-```json
+```c++
 unFormattedStringTextLiteralToken = '#'{n} '"' .* '"' '#'{n}
 ```
 
@@ -474,7 +481,7 @@ stringTextLiteralToken = formattedStringTextLiteralToken|unformattedStringTextLi
 
 Are simply marker identifiers that specify the type of literal tokens in NPL (_more in the semantic section_). Below is the number literal token and text literal token syntax with their literal token tag specifications written in NTPL:
 
-```json
+```c++
 numberLiteralToken = integerNumberLiteralToken|realNumberLiteralToken '\'' identifierToken
 
 textLiteralToken = identifierToken characterTextLiteralToken|stringTextLiteralToken
@@ -534,6 +541,7 @@ Obviously the NTPL function for symbol tokens is `symbolToken` equal to the symb
 
 Like was previously said, high-level construct syntax describe the high-level language constructs built from tokens. The following are the various high-level construct syntax in NPL:
 
+- File contents
 - Type syntax
 - Objects syntax
 - Parameters entry syntax
@@ -548,7 +556,7 @@ Like was previously said, high-level construct syntax describe the high-level la
 - Expressions syntax
 - Block syntax
 - Statement syntax
-- LCI (Language Communication Interface) syntax
+- LCIs (_Language Communication Interfaces_) syntax
 - Import syntax
 - Use syntax
 - Groupings syntax
@@ -557,36 +565,44 @@ Like was previously said, high-level construct syntax describe the high-level la
 
 Needed NTPL function in this section:
 
-```json
+```c++
 list($1:exp, $2:exp = ',', $3:op = `*`) = $1 ($2 $1)`$3`
 ```
 
 ### Format for this section
 
-Unlike the comment and token sections, this section has a fixed format for how the information of the various syntaxes would be presented. First would be the syntax of the high-level construct in NTPL, second would be the auxiliary syntax in NTPL, if any, that would be used to display additional helper syntaxes directly linked to the high-level construct, third and finally would be the supplementary info, if any, that covers additional essential information that cannot be represented in NTPL on the parsing of the high-level construct syntax.
+Unlike the comment and token sections, this section has a fixed format for how the information of the various syntaxes would be presented. First would be the syntax of the high-level construct in NTPL, second would be the auxiliary syntax in NTPL, if any, that would be used to display additional helper syntaxes directly linked to the high-level construct, third and finally would be the supplementary info, if any, that includes additional essential information that cannot be represented in NTPL or is better represented in textual format on the parsing of the high-level construct syntax.
 
 The format of this section shown in NTPL for fun:
 
-```json
+```c++
 highLevelConstructSyntaxSection = primarySyntax auxiliarySyntax? supplementaryInfo?
 ```
 
-Obviously, the above NTPL function has no real purpose in this NPL specification other than to describe the format of this section.
+ Obviously, the above NTPL function has no real purpose in this NPL specification other than to describe the format of this section.
 
 
+
+### File Contents
+
+Are the various high-level construct syntaxes that are allowed  in the high-level construct syntax level to be written in an NPL source code file. Below is the NTPL for it:
+
+```c++
+fileContent = (object|function|marco|scope|import|contract|typeCreator)*
+```
 
 ### Type Syntax
 
 Below is the type syntax written in NTPL:
 
 ```json
-type = basicType|functionType|contractType|valueReference|memoryAddressReferenceType|typeLCI|typeFromExpression
+type($1:bool = true) = basicType($1)|functionType|contractType|valueReference|memoryAddressReferenceType|typeLCI|typeFromExpression
 ```
 
-Auxiliary syntaxes for types syntax:
+Auxiliary syntaxes for types syntax written in NTPL:
 
 ```json
-basicType = scopedIdentifier typeArgumentEntry? comptimeValueArgumentEntry?
+basicType($1:bool) = scopedIdentifier typeArgumentEntry($1)? comptimeValueArgumentEntry?
 
 functionType = 'fn' '(' list(type) ')' type|'!'
 
@@ -613,7 +629,7 @@ functionExpressionValueParameter = 'obj' functionExpressionValueParameterPart|fu
 field($1:bool) = 'obj' fieldPart1|fieldPart2($1)|fieldGrouping
 ```
 
-Auxiliary syntaxes for objects syntax:
+Auxiliary syntaxes for objects syntax written in NTPL:
 
 ```json
 directInit = valueArgumentEntry
@@ -630,7 +646,7 @@ mainObjectPart1 = objectIdentifier (objectTypeEntry|indirectInit)?
 
 mainObjectPart2($1:bool = false) = 'mut'? unpackingEntry objectTypeEntry($1)|indirectInit
 
-basicValueParameter = objectIdentifier|unpackingEntry ':' type indirectInit?
+basicValueParameter = objectIdentifier|unpackingEntry ':' type(false) indirectInit?
 
 variadicValueParameter = variadicValueParameterPart ':' '..'? type
 
@@ -647,19 +663,19 @@ functionExpressionValueParameterPart = objectIdentifier|unpackingEntry (':' type
 
 Below are the parameters entry syntax written in NTPL:
 
-```json
+```c++
 valueParameterEntry = '('list((attributeLCI? valueParameter))')'
 
-comptimeValueParameterEntry = '!' '('list((attributeLCI? valueParameter))')'
+comptimeValueParameterEntry = '!'.'('list((attributeLCI? valueParameter))')'
 
 functionExpressionValueParameterEntry = '('list(functionExpressionValueParameter)')'
 
 typeParameterEntry = '['list(typeParameter|variadicTypeParameter)']'
 ```
 
-Auxiliary syntaxes for parameters entry syntax:
+Auxiliary syntaxes for parameters entry syntax written in NTPL:
 
-```json
+```c++
 typeParameter = 'type' userIdentifierToken typeArgumentEntry?
 
 variadicTypeParameter = 'type' '..' userIdentifierToken
@@ -667,17 +683,17 @@ variadicTypeParameter = 'type' '..' userIdentifierToken
 
 ### Arguments Entry Syntax
 
-Below are the arguments entry syntax for NTPL:
+Below are the arguments entry syntax written in NTPL:
 
 ```json
 valueArgumentEntry = '('list(valueArgument)')'
 
-comptimeValueArgumentEntry = '!' '('list(valueArgument)')'
+comptimeValueArgumentEntry = '!'.'('list(valueArgument)')'
 
-typeArgumentEntry = '[' list(typeArgument) ']'
+typeArgumentEntry($1:bool) = '[' list(typeArgument($1)) ']'
 ```
 
-Auxiliary syntaxes for arguments entry syntax:
+Auxiliary syntaxes for arguments entry syntax: written in NTPL
 
 ```json
 valueArgument = expression|parameterValueArgument|valueArgumentListGenerator|expressionCodeArgument|'_'
@@ -696,12 +712,12 @@ whileLoopStatementHead = 'while' (list(object) ';')? expression (';' expression)
 
 expressionCodeArgument = '~>' expression
 
-typeArgument = attributeLCI? (type ('/'userIdentifierToken)?)|('/'userIdentifierToken)
+typeArgument($1:bool) = attributeLCI? if $1: (type ('/'userIdentifierToken)?)|('/'userIdentifierToken) else (type ('/'userIdentifierToken)?)
 ```
 
 ### Constraint Application Syntax
 
-Below is the NTPL format for constraint application syntax:
+Below is the constraint application syntax written in NTPL:
 
 ```json
 constraintApplication = 'apply' logicalBinaryExpression|'_'
@@ -709,29 +725,31 @@ constraintApplication = 'apply' logicalBinaryExpression|'_'
 
 ### Function Syntax
 
-Below is the NTPL format for function syntax:
+Below is the function syntax written in NTPL:
 
-```json
-function = 'fn' captureSpace? functionIdentifier valueParameterEntry? (type|'type'|'!')? constraintApplication? block|';'
+```c++
+function = 'fn' captureSpace? functionIdentifier valueParameterEntry? returnEntry? constraintApplication? block|';'
 ```
 
-Auxiliary NTPL format for function syntax:
+Auxiliary syntaxes for function syntax written in NTPL:
 
 ```json
 caputreSpace = '|'list(expression|(userIdentifierToken '=' expressions))'|'
+
+returnEntry = type|'type'|'!'
 
 functionIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
 ```
 
 ### Marco Syntax
 
-Below is the NTPL format for function syntax:
+Below is the marco syntax written in NTPL:
 
 ```json
-marco = 'marco' marcoIdentifier valueParameterEntry? (type|'type'|'!')? constraintApplication? block|';'
+marco = 'marco' marcoIdentifier valueParameterEntry? returnEntry? constraintApplication? block|';'
 ```
 
-Auxiliary NTPL format for marco syntax:
+Auxiliary syntaxes for marco syntax written in NTPL:
 
 ```json
 marcoIdentifier = userIdentifierToken|miscLCI|operator|grouping(userIdentifierToken|miscLCI|operator) typeParameterEntry? comptimeValueParameterEntry?
@@ -743,7 +761,7 @@ operator = [todo]
 
 ### Type Creators Syntax
 
-Below is the NTPL format for type creators syntax:
+Below are the type-creators syntax written in NTPL:
 
 ```json
 typeCreator = structTypeCreator|unionTypeCreator|valueDefCreator|uniqueTypeCreator
@@ -759,7 +777,7 @@ valueDefTypeCreator = 'valueDef' typeParameterEntry? userIdentifierToken|groupin
 uniqueTypeCreator = 'unique' genericTypeCreatorIdentifier constraintApplication? '=' type uniqueTypeCreatorRangeEntry?
 ```
 
-Auxiliary NTPL format for type creators syntax:
+Auxiliary syntaxes for type creators syntax written in NTPL:
 
 ```json
 genericTypeCreatorIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
@@ -769,15 +787,15 @@ uniqueTypeCreatorRangeEntry = 'from' integerNumberLiteralToken'~'integerNumberLi
 
 ### Contract Syntax
 
-Below is the NTPL format for contract syntax:
+Below is the contract syntax written in NTPL:
 
 ```json
 contract = 'contract' typeParameterEntry contractIdentifier contractInheritancePart? constraintApplication? contractBody
 ```
 
-Auxiliary NTPL format for contract syntax:
+Auxiliary syntaxes for contract syntax written in NTPL:
 
-```json
+```c++
 contractBody = '=' (contractContentPart|import)+ 'end'
 
 contractIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry?
@@ -789,15 +807,15 @@ contractInheritancePart = ':' list(userIdentifierToken, '+')
 
 ### Impl Syntax
 
-Below is the NTPL format for impl syntax:
+Below is the impl syntax written in NTPL:
 
 ```json
 impl = 'impl' typeArgumentEntry? implIdentifier constraintApplication? implBody|';'
 ```
 
-Auxiliary NTPL format for impl syntax:
+Auxiliary syntaxes for impl syntax written in NTPL:
 
-```json
+```c++
 implIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeArgumentEntry?
 
 implContentPart = attributeLCI? function|marco
@@ -807,15 +825,15 @@ implBody = '=' (implContentPart|import)+ 'end'
 
 ### Scope Syntax
 
-Below is the NTPL format for scope syntax:
+Below is the scope syntax written in NTPL:
 
 ```json
 scope = 'scope' scopeIdentifier constraintApplication? scopeBody
 ```
 
-Auxiliary NTPL format for scope syntax:
+Auxiliary syntaxes for scope syntax  written in NTPL:
 
-```json
+```c++
 scopeBody = '=' (scopeContentPart|impl|use|import)* 'end scope'
 
 scopeIdentifier = (userIdentifierToken|typeScopeIdentifier)|scopeIdentifierGrouping
@@ -827,7 +845,7 @@ typeScopeIdentifier = '@' userIdentifierToken typeParameterEntry? comptimeValueP
 
 ### Expressions Syntax
 
-Below is the NTPL format for expressions syntax: (**Remember to make dot operators only accept scoped identifiers and grouping of scoped identifiers**)
+Below are the expressions syntax written in NTPL:
 
 ```json
 expression = attributeLCI? assignmentBinaryExpression
@@ -846,20 +864,18 @@ additiveBinaryExpression = list(multiplicativeBinaryExpression, '+'|'-')
 
 multiplicativeBinaryExpression = list(exponentiationBinaryExpression, '*'|'/'|'%'|'/%')
 
-exponentiationBinaryExpression = list(asBinaryExpression, '^')
+exponentiationBinaryExpression = list(fromBinaryExpression, '^')
 
-asBinaryExpression = dotBinaryExpression ('as' 'exp'|'fn')*
+fromBinaryExpression = ('exp' 'from' scopedIdentifier typeArgumentEntry? comptimeValueArgumentEntry?)|('fn' 'from' dotBinaryExpression)|dotBinaryExpression
 
-dotBinaryExpression = list((unaryPrefixExpression unaryPostfixOperator*), '.')
+dotBinaryExpression = unaryPrefixExpression unaryPostfixOperator* ('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
 
 unaryPrefixExpression = (unaryPrefixOperator unaryPrefixExpression)|primaryExpression
 
-primaryExpression = collectionExpression|(':'? scopedIdentifier)|'variadic'|
-expressionType|conditionalExpression|objectExpression|functionExpression|block|literal|
-precedenceEntry|grouping(primaryExpression)|expressionLCI
+primaryExpression = collectionExpression|(':'? scopedIdentifier)|'variadic'|expressionType|conditionalExpression|objectExpression|functionExpression|block|literal|precedenceEntry|grouping(expression)|expressionLCI
 ```
 
-Auxiliary NTPL format for expressions syntax:
+Auxiliary syntaxes for expressions syntax written in NTPL:
 
 ```json
 assignmentBinaryOperator = '='|':='|'+='|'-='|'*='|'/='|'%='|'^='|'=-'|'=/'|'=%'
@@ -872,19 +888,21 @@ relationalBinaryOperator = 'lt'|'gt' ('and'|'or' equalityBinaryOperator|'lt'|'gt
 
 unaryPostfixOperator = functionCall|('.['expression']')|orFieldQueryConditionalExpression
 
-functionCall = typeArgumentEntry? comptimeValueArgumentEntry? valueArgumentEntry
+functionCall = (typeArgumentEntry comptimeValueArgumentEntry? valueArgumentEntry)|(comptimeValueArgumentEntry valueArgumentEntry)|valueArgumentEntry
 
 unaryPrefixOperator = '-'|'not'|('mut'? '&'|'addressof')
 
-collectionExpression = userIdentifierToken '['list(expression)']'
+collectionExpression = userIdentifierToken? '['list(expression)']'
                                  
-predenceEntry = '('expression')'
+precedenceEntry = '('expression')'
 
-expressionType = '@'type
+expressionType = '@'.type
 
-scopedIdentifier = userIdentifierToken|'outer' (':' list(userIdentifierToken|'outer'|grouping(scopedIdentifier), ':'))?
+scopedIdentifier = (userIdentifierToken|'outer').scopedIdentifierPart?
 
-objectExpression = 'obj' ':' (type valueArgumentEntry?)|grouping((type valueArgumentEntry?))
+scopedIdentifierPart = (':'.list(userIdentifierToken|'outer'|grouping(scopedIdentifier), ':'))
+
+objectExpression = 'obj' ':' (type.valueArgumentEntry?)|grouping((type.valueArgumentEntry?))
 
 functionExpression = 'fn' captureSpace? functionExpressionValueParameterEntry type? block
 
@@ -896,7 +914,7 @@ matchConditionalExpression = 'match' (list(object) ';')? expression 'with' list(
 
 orFieldQueryConditionalExpression = '=>' list(orFieldQueryBranch, '|') elseBranch?
 
-orFieldQueryBranch = mainOrFieldQueryBranch|('{'userIdetifierToken'}')
+orFieldQueryBranch = mainOrFieldQueryBranch|('{'userIdetifierToken'}')|('('userIdentifierToken')')
 
 mainOrFieldQueryBranch = mainOrFieldQueryPart1 mainOrFieldQueryPart2? block
 
@@ -907,73 +925,284 @@ mainOrFieldQueryPart2 = ('('userIdentifierToken')')|('['list(userIdentifierToken
 elseBranch = 'else' block?
 ```
 
-### Block Syntax
+#### Supplementary info
 
-Below is the NTPL format for block syntax:
+##### Precedence
+
+The layout of the primary expression syntaxes is setup such as to identify the various NPL precedence levels from basic NTPL expressions with the sole ambiguity being `dotBinaryExpression` which would be explained in this section. It works by simply making a precedence level into an NTPL function, for example, an `additiveBinaryExpression` has a lower precedence than a  `multiplicativeBinaryExpression` because the LHS and RHS operand call in an `additiveBinaryExpresion` asks for the `multiplicativeBinaryExpression`,  which would be fully syntactically evaluated first, that is collected into an expression, before the additive operators are paired with the `multiplicativeBinaryExpression` operands, that means an expression like so `2 + 5 * 4 - 3 / 6` equals this `2 + (5 * 4) - (4 / 6)`.
+
+> Note that NPL does not exactly follow the mathematically and conventional programming precedence levels like most programming languages do, this would be further discussed in the high-level construct semantics section.
+
+The reason as to why it is setup this way was born out of convenience and that convenience later served an essential purpose. So, basically, it is convenient to represent and parse for precedence levels in the high-level syntax phase because it is at this phase where the tokens are collected into the various high-level construct syntaxes and instead of only parsing for dumb expressions (_expressions without the arrangement of precedence_), it is just better to parse for both the expressions and their precedence instead of parsing for dumb expressions then deferring precedence arrangement to the high-level construct semantic phase. This is only made possible because precedence level parsing has no error consequence, meaning that it does not result in error reporting, it is does, however, result in a logical consequence, that is logical errors in code due to mismatches in precedence levels. As for the essential purpose it later grew to serve, the layout of the precedence levels into separate NTPL functions creates an opportunity to ask for certain precedence levels while leaving out some, an example of this is in the constraint application syntax, where a `logicalBinaryExpression` is asked for, thereby hindering the open parsing of the `assignmentBinaryExpression` (_reason for using the `logicalBainryExpression` in the constraint application syntax to ask for expressions is because most other syntaxes, like struct, union, contract, impl and so on, that make use of the constraint application syntax ask for `=` after the expression of the constraint application, so to prevent parsing conflict, `assignmentBinaryExpression` is not asked for openly, rather its immediate higher precedence level is asked for instead, so entry of an `assignmentBinaryExpression` must be done with the `precedenceEntry` which encloses the `assignmentBinaryExpression` thereby preventing parsing conflict_).
+
+###### The Ambiguity of `dotBinaryExpression`
+
+`dorBinaryExpression` has a certain ambiguity to it, here is the syntax:
 
 ```json
-block = '{' blockID? (blockConentPart|expression|statement|import)* '}'
+unaryPrefixExpression unaryPostfixOperator* ('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
 ```
 
-Auxiliary NTPL format for block syntax:
+The ambiguity lies in the precedence level of the dot operator and the `unaryPostfixOperator`. It is an ambiguity because merely looking at the syntax is not enough to accurately decipher the precedence levels of the two operators. Below is the explanation to eliminate the ambiguity:
 
 ```json
+unaryPrefixExpression unaryPostfixOperator*
+```
+
+The above unequivocally parses for the `unaryPrefixExpression` first which has the higher precedence level, then parses for the `unaryPostfixOperator` which has a lower precedence level than the postfix expression.
+
+```json
+('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
+```
+
+The above parses for the dot operator then scoped Identifier related syntax and finally parses for `unaryPostfixOperator`, the programming language gives the dot operator a higher precedence level than the postfix operator, so, the dot operator and its RHS operands (_`scopedIdentifier|scopedIdentifierPart`_) must be syntactically evaluated first before the `unaryPostfixOperator`. 
+
+So, a syntactic evaluation of this `a.b()` would result in this `(a.b)()`, not this `a.(b())`, thereby keeping with the sane and intuitive programming precedence convention in programming languages that make use of the OOP method (_function_) call style.
+
+##### White-Space dependent parsing
+
+Using white-space information in parsing to avoid high-level syntax parsing conflicts. Some certain expression syntaxes are not unique amongst each other, their syntaxes overlap which is near impossible to parse them with certainty and this further exacerbated in syntaxes that ask for more than one expression that could span multiple lines like in block syntaxes, for example:
+
+```
+: Should the below be parsed as a collection expression with a tag and erroneous precedence entry or function call?
+➜ a[b] ()
+
+: Should the below be parsed as an identifier and expression grouping or function call?
+➜ a (3, 4)
+
+: Should the below be parsed as an identifier, collection expression without a tag and precedence entry or function call or collection expression with a tag and precedence entry?
+➜ a [] (3)
+
+: Should the below be parsed as an identifier, collection expression without a tag and expression grouping or function call or collection expression with a tag and expression grouping?
+➜ a [] (4, 5, 6)
+
+: Should the below be parsed as an identifier, collection expression without a tag and expression grouping or function call or collection expression with a tag and expression grouping and erroneous precedence entry?
+➜ a [ui4] (4, 5, 6) ()
+
+: Should the below be parsed as an identifier, collection expression without a tag, LHS expression grouping for the addition expression or LHS function call for the addition expression or collection expression with a tag and LHS expression grouping for the addition expression?
+➜ a []
+(4, 5) + 45
+```
+
+And so on.
+
+Actually, in syntaxes that ask for more than one expression that could span multiple lines, this can be easily avoided in the user side by making the expression delimiter (_`;`_) compulsory after each expression, so the user/programmer is the one tasked with making sure the expressions are parsed right like so:
+
+```
+: The programmer makes the below to be a collection expression with a tag and precedence entry
+➜ a[b]; ();
+
+: The programmer makes the below to be a function call
+➜ a[b] ();
+
+: The programmer makes the below to be an identifier and expression grouping
+➜ a; (3, 4);
+
+: The programmer makes the below to a function call
+➜ a (3, 4);
+
+: The programmer makes the below to be an identifier, collection expression without a tag and precedence entry
+➜ a; []; (3);
+
+: The programmer makes the below to be a function call
+➜ a [] (3);
+
+: The programmer makes the below to be an identifier, collection expression without a tag and precedence entry
+➜ a;
+[];
+(3);
+```
+
+But none of the above is desirable in any sane setting for two simple reason, one, it gives the programmer the prerogative to write absolutely dumb and confusing code, for example, `a [] (3)` should not be considered a function call even in syntaxes that ask for just one expression, it is dumb and undesirable, two, needing the expression delimiter after every individual expression is not pleasant and can cause code noise in extreme cases especially when a non code noise solution (_white-space_) is readily available.
+
+So, the programming language takes such power from the programmer and defines three rules that makes use of the white-space information for the parsing of these certain high-level construct syntaxes.
+
+**Rules**
+
+1. Using white-space to decisively parse for collection expressions
+
+   A collection expression with `userIdentifierToken` (that is its tag) must have an absence of white-space between the `userIdentifierToken` and the collection expression hinting tokens, that is `[`, like so:
+
+   ```
+   ➜ a[34, 5, 6]
+   ➜ a[]
+   ```
+
+   Any presence of white-space between them effectively makes them non collection expression sanctioned parsing, like so:
+
+   ```
+   : The below is an identifier and collection expression without a tag(identifier)
+   ➜ a [34, 5, 6]
+   ```
+
+2. Using white-space to decisively parse for function calls
+
+   A function call must have an absence of white-space between its function call hinting tokes, that is `(`, `[` and `!`, like so:
+
+   ```
+   ➜ a[]()
+   ➜ a[]!()()
+   ➜ a!()()
+   ➜ a()
+   ```
+
+   Any presence of white-space between them effectively makes them non function call sanctioned parsing, like so:
+
+   ```
+   : The below is an identifier, collection expression without a tag and erroneous precedence entry
+   ➜ a [] ()
+   
+   The below is an identifier, collection expression without a tag and erroneous syntax entry starting from `!`
+   ➜ a [] ! () ()
+   
+   The below is a collection expression with a tag and precedence entry
+   ➜ a[] (34)
+   ```
+
+3. Mandatory expression delimiter (_`;`_) for expressions that share the same line
+
+   This rule mandates that any and all expressions that share the same line must be delimited by the expression delimiter (_`;`_), this is done for readability purposes. For example:
+
+   ```
+   : Due to the above two rules, the below comprises of individual expressions that share the same line, that is an identifier, collection expression without a tag and erroneous precedence entry, so,they must be delimited by the expression delimiter
+   ➜ a [] ()
+   ⮞ a; []; ()
+   
+   : Leaving expressions like the below clear and readable
+   ➜ a[]
+   (34, 45) + 90
+   ```
+
+   This rule is obviously only for syntaxes that ask for more than one expression.
+
+> Note that rules 1 and 2 could actually be represented in NTPL by using its no white-space operator to ask for the absence of white-space when parsing collection expressions and function calls like some syntaxes already do, but it is just more proper to explain here in textual format than to represent in NTPL.
+
+**Gaps in the rules**
+
+The above rules do not still protect from syntaxes that make use of the same operator but in different positions, like the `-` which is both a binary and unary prefix operator. For this, the user/programmer is meant to show intent of what exactly is desired to be parsed like. An example like the below:
+
+```
+➜ 2
+-2
+
+➜ 2 -
+2
+
+➜ 2     -2
+```
+
+All the above is parsed as a binary expression, but the programmer can choose to delimit the above to parse instead as either a binary expression or unary prefix expression, like so:
+
+```
+➜ 2;
+-2
+
+➜ 2 -
+2
+
+➜ 2;	-2
+```
+
+**As for the reason why I designed NPL with such syntax conflicts in the first place**
+
+I did it to keep with the conventional syntaxes in the programming and mathematical space, mainly because the conventional syntaxes are sane and intuitive to reason about, for example, it is easier to imagine an array syntax and by extension collection expressions like so `[1, 2, 3]` in programming because languages like python, javascript and PHP already sets precedence for this and it is easier to imagine a function call syntax like this `foo()` because all procedural and imperative languages make use of such syntax and it is also easier to imagine the precedence entry syntax like this `(2 + 3) * 4` because years of precedence has already been set in mathematics and subsequently programming. Expression grouping is the odd ball here as I could have literally made it start with any other brace or set of unicode characters, but the reason I stuck with `()` is because using a non ASCII  brace, like `〈〉` or `❴❵`, simply isn't as aesthetically pleasant as this `()` and using a set of unicode characters, like this `%()` or `$()` is to verbose for my liking, so ultimately it came down to my design preference.
+
+### Block Syntax
+
+Below is the block syntax written in NTPL:
+
+```c++
+block = '{' blockID? (blockConentPart|(expression ';'?)|statement|import)* '}'
+```
+
+Auxiliary syntaxes for block syntax: written in NTPL
+
+```c++
 blockID = '.' userIdentifierToken
 
 blockContentPart = attributeLCI? function|marco|typeCreator|object|scope
 ```
 
+#### Supplementary Info
+
+Syntaxes, like `function`, `marco`, `ifConditionalExpression` and `forLoopStatement`,  that ask for the block syntax must share the same line as the calling syntax, for example:
+
+```rust
+➜ fn foo() {}
+
+➜ fn foo() {
+}
+
+➜ if true {}
+
+➜ if true {
+}
+
+➜ for i in [3, 4, 5] {}
+
+➜ for i in [3, 4, 5] {
+}
+```
+
+This is done to centralize the programming style of brace writing when it comes to those syntaxes which ends debates on which is the better style to use therefore ensuring universality in all NPL codebases.
+
 ### Statement Syntax
 
-Below is the NTPL format for statement syntax:
+Below is the statement syntax written in NTPL:
 
 ```json
 statement = loopStatement|jumpStatement
+```
 
+Auxiliary syntaxes for statement syntax written in NTPL:
+
+```json
 jumpStatement = '->' blockId? 'break'|'continue'|expression
 
 loopStatement = attributeLCI? forLoopStatement|whileLoopStatement
-```
 
-Auxiliary NTPL format for statements syntax:
-
-```json
 forLoopStatement = 'for' (list((attributeLCI? object)) ';')? userIdentifierToken 'in' expression block
 
 whileLoopStatement = 'while' (list((attributeLCI? object)) ';')? expression? (';' expression)? block
 ```
 
-### LCI Syntax
+### LCIs Syntax
 
-Below is the NTPL format for LCI syntax:
+Below are the LCIs syntax written in NTPL:
 
 ```json
-attributeLCI = 'at' ':' (userIdentifierToken valueArgumentEntry?)|grouping((userIdentifierToken valueArgumentEntry?))
+attributeLCI = 'at'.':'.(attributeLCIPart|grouping(atrributeLCIPart))
 
-expressionLCI = 'exp' ':' userIdentifierToken
+expressionLCI = 'exp'.':'.(userIdentifierToken|grouping(userIdentifierToken))
 
-typeLCI = 'ty' ':' userIdentifierToken (valueArgumentEntry|typeArgumentEntry)?
+typeLCI = 'ty'.':'.(userIdentifierToken (valueArgumentEntry|typeArgumentEntry)?)
 
-miscLCI = 'misc' ':' (userIdentifierToken valueArgumentEntry)
+miscLCI = 'misc'.':'.(userIdentifierToken valueArgumentEntry)
+```
+
+Auxiliary syntaxes for LCI syntax written in NTPL:
+
+```json
+attributeLCIPart = userIdentifierToken valueArgumentEntry?
 ```
 
 ### Import Syntax
 
-Below is the NTPL format for import syntax:
+Below is the import syntax written in NTPL:
 
-```json
+```c++
 import = 'import' 'mod'|'pkg'|'lib'|'type'|'scope'|'fn'|'marco'|'contract'|'obj' scopedIdentifier|grouping(scopedIdentifier)
 ```
 
 ### Use Syntax
 
-Below is the NTPL format for use syntax:
+Below is the use syntax written in NTPL:
 
 ```json
 use = 'use' ('impl'|'fn'|'obj'|'field'|'scope' userIdentifierToken|grouping(userIdentifierToken))|useForMarco|'*'
 ```
 
-Auxiliary NTPL format for use syntax:
+Auxiliary syntaxes for use syntax written in NTPL:
 
 ```json
 useForMarco = 'marco' userIdentifierToken|miscLCI|grouping(userIdentifierToken|miscLCI)
@@ -981,7 +1210,7 @@ useForMarco = 'marco' userIdentifierToken|miscLCI|grouping(userIdentifierToken|m
 
 ### Groupings Syntax
 
-Below is the NTPL format for groupings syntax:
+Below are the groupings syntax written in NTPL:
 
 ```json
 grouping($1:exp) = '(' list($1, _, `{2,}`) ')'
@@ -997,7 +1226,7 @@ functionExpressionValueParameterGrouping = 'mut'? '(' list(functionExpressionVal
 fieldGrouping = '..'? 'mut'? '(' list(fieldPart1|fieldPart2, _, `{2,}`) ')' (':' '..'? type)?
 ```
 
-Auxiliary NTPL format for groupings syntax:
+Auxiliary syntaxes for groupings syntax written in NTPL:
 
 ```json
 scopeIdentifierGroupingPart1 = grouping(userIdentifierToken)
@@ -1007,18 +1236,12 @@ scopeIdentifierGroupingPart2 = '@' grouping(userIdentifierToken) typeParameterEn
 
 ## High-Level Construct Semantic
 
-Like was previously said, high-level construct semantic details the meaning of the various syntax, where they are expected to be, their use and their low-level implementation. The following final section of this document specification would detail the various semantics of the **nc programming language**.
-
-### Language File Contents
-
-Before the various semantics of NPL are discussed, contents of an NPL source code file needs to be specified. Language file contents are the various high-level construct syntax that are allowed to be written in an NPL source code file. Below are the NTPL format of the various syntax that can be written in an NPL source code file:
+Like was previously said, high-level construct semantic details the meaning of the various syntax, where they are expected to be, their use and their low-level implementation. The following final section of this document specification would detail the various semantics of the **nc programming language**. Below are the list of the various high-level semantics:
 
 - Types
 - Context identifiers
 
-```
-unique r"1-32" = ui8 from 1~32
-```
+
 
 
 
