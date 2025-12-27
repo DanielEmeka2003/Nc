@@ -2,7 +2,7 @@
 
 This document defines the formal specifications of the nc programming language, the specification that would be used to write the compiler and interpreter of the nc programming language. As inferred from the previous statement, nc programming language is built to work for both compilation and an odd form of interpretation which would be discussed at length in this document. Unlike most formal specifications, this document is written in a beginner friendly way to facilitate faster understanding of the document for persons that have met the criteria of possessing rudimentary knowledge in programming concepts, NTPL and compiler development.
 
-It is encouraged to read this specification document using a dedicated markdown editor or viewer like **Typora** (_what I use to write this specification document with the only downside being the code section has no setting to turn off code wrapping_) other than to read this specification document on github, because it honestly looks ugly on github. I also currently use C++ as the language of choice for the NTPL code sections.
+It is encouraged to read this specification document using a dedicated markdown editor or viewer like **Typora** (_what I use to write this specification document with the only downside being the code section has no setting to turn off code wrapping_) other than to read this specification document on github, because it honestly looks ugly on github. I also currently use bat as the language of choice for the NTPL code sections because NTPL does not yet have syntax highlighting.
 
 An example of the Typora interface:
 
@@ -50,7 +50,7 @@ Based on the categories of comments, there are two type of discard comments, nam
 
 Below is the single-line discard comments syntax written in NTPL:
 
-```c++
+```bat
 singleLineDiscardComment = '>! ' any*
 ```
 
@@ -66,7 +66,7 @@ Examples of the above syntax would be:
 
 Below is the multi-line discard comments syntax written in NTPL:
 
-```c++
+```bat
 multiLineDiscardComment = '<\'' any* '\'>'
 ```
 
@@ -94,7 +94,7 @@ Based on the categories of comments, there are two types of document comments, n
 
 Below is the single-line document comment syntax written in NTPL:
 
-```c++
+```bat
 singleLineDocumentComment = '>: ' any*
 ```
 
@@ -109,7 +109,7 @@ Examples of the above syntax would be:
 
 Below is the multi-line document comments syntax written in NTPL:
 
-```c++
+```bat
 multiLineDocumentComment = '<"' .* '">'
 ```
 
@@ -139,7 +139,7 @@ There are 3 types of tokens, namely:
 
 Are tokens that make use of a set of unicode characters that can be combined to form text that depends on a *speaking* language and the context it is written in. Below is the basic identifier syntax written in NTPL:
 
-```c++
+```bat
 basicIdentifierToken = '_'|Script ('_'|Script|'0'~'9')*
 ```
 
@@ -235,7 +235,7 @@ There are two types of raw user identifier tokens, namely:
 
 Are raw user identifier tokens that allow the entry of language identifiers as user identifiers. Below is the syntax written in NTPL:
 
-```c++
+```bat
 rawLanguageIdentifierToken = 'r\''languageIdentifierToken
 ```
 
@@ -251,7 +251,7 @@ r'scope
 
 Are raw user identifier tokens that allow the entry of any unicode character to form an identifier, provided it does not form into a basic identifier token. Below is the syntax written in NTPL:
 
-```c++
+```bat
 rawUserIdentifierToken = 'r'stringTextLiteralToken
 ```
 
@@ -279,7 +279,7 @@ Besides, anything else goes in a raw user string identifier token entry, a user 
 
 Subsequently, the NTPL function for identifier tokens is:
 
-```c++
+```bat
 identifierToken = languageIdentifierToken|userIdentifierToken
 ```
 
@@ -298,7 +298,7 @@ There are two types of literal tokens, namely:
 
 Are tokens that allow the entry of numbers in NPL. Number literal tokens in NPL are positional numeral system numbers that support bases `2` to `36` and digit separators(`_`). Due to the fact that number literal tokens in NPL support bases `2` to `36`, unicode characters `A` to `Z` are valid digits. Detailed explanation of positional numeral system can be found in [**TODO: create a document to explain positional numeral systems**]. Below is the digits and base entry syntax written in NTPL:
 
-```c++
+```bat
 digits = '0'~'9'|'A'~'Z'
 
 base = ₂~₃₆
@@ -315,7 +315,7 @@ There are two types of number literal tokens, namely:
 
 Are number literal tokens that allow the entry of whole numbers (_all digits including zero_). Below is the syntax written in NTPL:
 
-```c++
+```bat
 integerNumberLiteralToken = '0'~'9' ('_'? digits)* base?
 ```
 
@@ -337,7 +337,7 @@ Are number literal tokens that allow the entry of rational numbers (_fractional 
 
 Real number literal tokens can either be written in either normal fractional number form `0.0003` or scientific notation form `3.0@-4` or `3@-4`. Because number literal tokens in NPL support bases `2` to `36`, the exponent base indicator is  `@` unicode character not the conventional `e` or `E` with the exponent base being the number after the exponent base indicator. Since the exponent base refers to the count of digits to move the fractional point by, the language only parses for base 10 digits as the exponent base which is then used to refer to the exact number of digits to move the fractional point by. Below is the real number literal token and exponent syntax written in NTPL:
 
-```c++
+```bat
 realNumberLiteralToken = '0'~'9' ('_'? digit)* '.' digit ('_'? digit)* base? exponent?
 
 exponent = '@' '-'? '0'~'9'+
@@ -376,7 +376,7 @@ Are a set combination of unicode characters starting with `\` unicode character 
 
 - `r'\'unicode_character_codepoint` : allows the entry of unicode characters using their code-points
 
-  - ```c++
+  - ```bat
     unicode_character_codepoint = '['integerNumberLiteralToken']'
     ```
 
@@ -386,7 +386,7 @@ Are a set combination of unicode characters starting with `\` unicode character 
 
 - `r'\'unicode_character_name` : allows the entry of unicode characters using their names
 
-  - ```c++
+  - ```bat
     unicode_character_name = '{'basicIdentifierToken (' '|'-' basicIdentifierToken)*'}'
     ```
     
@@ -405,7 +405,7 @@ There are two types of text literal tokens, namely:
 
 Are text literal tokens that allow the entry of exactly one unicode character or text action that results in a unicode character. Below is the syntax written in NTPL:
 
-```c++
+```bat
 characterTextLiteralToken = '\'' any|text_action '\''
 ```
 
@@ -434,7 +434,7 @@ Are text literal tokens that allow the entry of zero or more unicode characters.
 
 Are string text literal tokens that support the entry of text actions. Below is the syntax written in NTPL:
 
-```c++
+```bat
 formattedStringTextLiteralToken = '"' (any|text_action)* '"'
 ```
 
@@ -455,7 +455,7 @@ some good 🐔
 
 Are string text literal tokens that do not support the entry of text actions, meaning text actions simply have no effect in the string text literal token. Below is the syntax written in NTPL:
 
-```c++
+```bat
 unFormattedStringTextLiteralToken = '#'{n} '"' .* '"' '#'{n}
 ```
 
@@ -473,7 +473,7 @@ Examples of the above format would be:
 
 Subsequently, the NTPL function of string text literal token is:
 
-```c++
+```bat
 stringTextLiteralToken = formattedStringTextLiteralToken|unformattedStringTextLiteralToken
 ```
 
@@ -481,7 +481,7 @@ stringTextLiteralToken = formattedStringTextLiteralToken|unformattedStringTextLi
 
 Are simply marker identifiers that specify the type of literal tokens in NPL (_more in the semantic section_). Below is the number literal token and text literal token syntax with their literal token tag specifications written in NTPL:
 
-```c++
+```bat
 numberLiteralToken = integerNumberLiteralToken|realNumberLiteralToken '\'' identifierToken
 
 textLiteralToken = identifierToken characterTextLiteralToken|stringTextLiteralToken
@@ -565,7 +565,7 @@ Like was previously said, high-level construct syntax describe the high-level la
 
 Needed NTPL function in this section:
 
-```c++
+```bat
 list($1:exp, $2:exp = ',', $3:op = `*`) = $1 ($2 $1)`$3`
 ```
 
@@ -575,7 +575,7 @@ Unlike the comment and token sections, this section has a fixed format for how t
 
 The format of this section shown in NTPL for fun:
 
-```c++
+```bat
 highLevelConstructSyntaxSection = primarySyntax auxiliarySyntax? supplementaryInfo?
 ```
 
@@ -587,7 +587,7 @@ highLevelConstructSyntaxSection = primarySyntax auxiliarySyntax? supplementaryIn
 
 Are the various high-level construct syntaxes that are allowed  in the high-level construct syntax level to be written in an NPL source code file. Below is the NTPL for it:
 
-```c++
+```bat
 fileContent = (object|function|marco|scope|import|contract|typeCreator)*
 ```
 
@@ -595,13 +595,13 @@ fileContent = (object|function|marco|scope|import|contract|typeCreator)*
 
 Below is the type syntax written in NTPL:
 
-```c++
+```bat
 type($1:bool = true) = basicType($1)|functionType|contractType|valueReference|memoryAddressReferenceType|typeLCI|typeFromExpression
 ```
 
 Auxiliary syntaxes for types syntax written in NTPL:
 
-```c++
+```bat
 basicType($1:bool) = scopedIdentifier typeArgumentEntry($1)? comptimeValueArgumentEntry?
 
 functionType = 'fn' '(' list(type) ')' type|'!'
@@ -619,7 +619,7 @@ typeFromExpression = '[' expression ']'
 
 Below are the objects syntax written in NTPL:
 
-```bash
+```bat
 object = 'obj' mainObjectPart1|mainObjectPart2|objectGrouping
 
 valueParameter = 'obj' basicValueParameter|variadicValueParameter|valueParameterGrouping
@@ -631,7 +631,7 @@ field($1:bool) = 'obj' fieldPart1|fieldPart2($1)|fieldGrouping
 
 Auxiliary syntaxes for objects syntax written in NTPL:
 
-```bash
+```bat
 directInit = valueArgumentEntry
 
 indirectInit = '=' expression
@@ -663,7 +663,7 @@ functionExpressionValueParameterPart = objectIdentifier|unpackingEntry (':' type
 
 Below are the parameters entry syntax written in NTPL:
 
-```c++
+```bat
 valueParameterEntry = '('list((attributeLCI? valueParameter))')'
 
 comptimeValueParameterEntry = '!'.'('list((attributeLCI? valueParameter))')'
@@ -675,7 +675,7 @@ typeParameterEntry = '['list(typeParameter|variadicTypeParameter)']'
 
 Auxiliary syntaxes for parameters entry syntax written in NTPL:
 
-```c++
+```bat
 typeParameter = 'type' userIdentifierToken typeArgumentEntry?
 
 variadicTypeParameter = 'type' '..' userIdentifierToken
@@ -685,7 +685,7 @@ variadicTypeParameter = 'type' '..' userIdentifierToken
 
 Below are the arguments entry syntax written in NTPL:
 
-```c++
+```bat
 valueArgumentEntry = '('list(valueArgument)')'
 
 comptimeValueArgumentEntry = '!'.'('list(valueArgument)')'
@@ -695,7 +695,7 @@ typeArgumentEntry($1:bool) = '[' list(typeArgument($1)) ']'
 
 Auxiliary syntaxes for arguments entry syntax: written in NTPL
 
-```c++
+```bat
 valueArgument = expression|parameterValueArgument|valueArgumentListGenerator|expressionCodeArgument|'_'
 
 parameterValueArgument = '.'userIdentifierToken '=' expression
@@ -719,7 +719,7 @@ typeArgument($1:bool) = attributeLCI? if $1: (type ('/'userIdentifierToken)?)|('
 
 Below is the constraint application syntax written in NTPL:
 
-```c++
+```bat
 constraintApplication = 'apply' logicalBinaryExpression|'_'
 ```
 
@@ -727,13 +727,13 @@ constraintApplication = 'apply' logicalBinaryExpression|'_'
 
 Below is the function syntax written in NTPL:
 
-```c++
+```bat
 function = 'fn' captureSpace? functionIdentifier valueParameterEntry? returnEntry? constraintApplication? block|';'
 ```
 
 Auxiliary syntaxes for function syntax written in NTPL:
 
-```c++
+```bat
 caputreSpace = '|'list(expression|(userIdentifierToken '=' expressions))'|'
 
 returnEntry = type|'type'|'!'
@@ -745,13 +745,13 @@ functionIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParam
 
 Below is the marco syntax written in NTPL:
 
-```c++
+```bat
 marco = 'marco' marcoIdentifier valueParameterEntry? returnEntry? constraintApplication? block|';'
 ```
 
 Auxiliary syntaxes for marco syntax written in NTPL:
 
-```c++
+```bat
 marcoIdentifier = userIdentifierToken|miscLCI|operator|grouping(userIdentifierToken|miscLCI|operator) typeParameterEntry? comptimeValueParameterEntry?
 
 operator = 'operator' operator
@@ -763,7 +763,7 @@ operator = [todo]
 
 Below are the type-creators syntax written in NTPL:
 
-```c++
+```bat
 typeCreator = structTypeCreator|unionTypeCreator|valueDefCreator|uniqueTypeCreator
 
 structTypeCreator = 'struct' genericTypeCreatorIdentifier constraintApplication? ( '=' list(field(true)) )|';'
@@ -779,7 +779,7 @@ uniqueTypeCreator = 'unique' genericTypeCreatorIdentifier constraintApplication?
 
 Auxiliary syntaxes for type creators syntax written in NTPL:
 
-```c++
+```bat
 genericTypeCreatorIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
 
 uniqueTypeCreatorRangeEntry = 'from' integerNumberLiteralToken'~'integerNumberLiteralToken
@@ -789,13 +789,13 @@ uniqueTypeCreatorRangeEntry = 'from' integerNumberLiteralToken'~'integerNumberLi
 
 Below is the contract syntax written in NTPL:
 
-```c++
+```bat
 contract = 'contract' typeParameterEntry contractIdentifier contractInheritancePart? constraintApplication? contractBody
 ```
 
 Auxiliary syntaxes for contract syntax written in NTPL:
 
-```c++
+```bat
 contractBody = '=' (contractContentPart|import)+ 'end'
 
 contractIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry?
@@ -809,13 +809,13 @@ contractInheritancePart = ':' list(userIdentifierToken, '+')
 
 Below is the impl syntax written in NTPL:
 
-```c++
+```bat
 impl = 'impl' typeArgumentEntry? implIdentifier constraintApplication? implBody|';'
 ```
 
 Auxiliary syntaxes for impl syntax written in NTPL:
 
-```c++
+```bat
 implIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeArgumentEntry?
 
 implContentPart = attributeLCI? function|marco
@@ -827,13 +827,13 @@ implBody = '=' (implContentPart|import)+ 'end'
 
 Below is the scope syntax written in NTPL:
 
-```c++
+```bat
 scope = 'scope' scopeIdentifier constraintApplication? scopeBody
 ```
 
 Auxiliary syntaxes for scope syntax  written in NTPL:
 
-```c++
+```bat
 scopeBody = '=' (scopeContentPart|impl|use|import)* 'end scope'
 
 scopeIdentifier = (userIdentifierToken|typeScopeIdentifier)|scopeIdentifierGrouping
@@ -847,7 +847,7 @@ typeScopeIdentifier = '@' userIdentifierToken typeParameterEntry? comptimeValueP
 
 Below are the expressions syntax written in NTPL:
 
-```c++
+```bat
 expression = attributeLCI? assignmentBinaryExpression
 
 assignmentBinaryExpression = logicalBinaryExpression (assignmentBinaryOperator assignmentBinaryExpression)
@@ -877,7 +877,7 @@ primaryExpression = collectionExpression|(':'? scopedIdentifier)|'variadic'|expr
 
 Auxiliary syntaxes for expressions syntax written in NTPL:
 
-```c++
+```bat
 assignmentBinaryOperator = '='|':='|'+='|'-='|'*='|'/='|'%='|'^='|'=-'|'=/'|'=%'
 
 logicalBinaryOperator = 'not'? 'and'|'or'|'xor'
@@ -939,19 +939,19 @@ The reason as to why it is setup this way was born out of convenience and that c
 
 `dorBinaryExpression` has a certain ambiguity to it, here is the syntax:
 
-```c++
+```bat
 unaryPrefixExpression unaryPostfixOperator* ('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
 ```
 
 The ambiguity lies in the precedence level of the dot operator and the `unaryPostfixOperator`. It is an ambiguity because merely looking at the syntax is not enough to accurately decipher the precedence levels of the two operators. Below is the explanation to eliminate the ambiguity:
 
-```c++
+```bat
 unaryPrefixExpression unaryPostfixOperator*
 ```
 
 The above unequivocally parses for the `unaryPrefixExpression` first which has the higher precedence level, then parses for the `unaryPostfixOperator` which has a lower precedence level than the postfix expression.
 
-```c++
+```bat
 ('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
 ```
 
@@ -1111,13 +1111,13 @@ I did it to keep with the conventional syntaxes in the programming and mathemati
 
 Below is the block syntax written in NTPL:
 
-```c++
+```bat
 block = '{' blockID? (blockConentPart|(expression ';'?)|statement|import)* '}'
 ```
 
 Auxiliary syntaxes for block syntax: written in NTPL
 
-```c++
+```bat
 blockID = '.' userIdentifierToken
 
 blockContentPart = attributeLCI? function|marco|typeCreator|object|scope
@@ -1150,13 +1150,13 @@ This is done to centralize the programming style of brace writing when it comes 
 
 Below is the statement syntax written in NTPL:
 
-```c++
+```bat
 statement = loopStatement|jumpStatement
 ```
 
 Auxiliary syntaxes for statement syntax written in NTPL:
 
-```c++
+```bat
 jumpStatement = '->' blockId? 'break'|'continue'|expression
 
 loopStatement = attributeLCI? forLoopStatement|whileLoopStatement
@@ -1170,7 +1170,7 @@ whileLoopStatement = 'while' (list((attributeLCI? object)) ';')? expression? (';
 
 Below are the LCIs syntax written in NTPL:
 
-```c++
+```bat
 attributeLCI = 'at'.':'.(attributeLCIPart|grouping(atrributeLCIPart))
 
 expressionLCI = 'exp'.':'.(userIdentifierToken|grouping(userIdentifierToken))
@@ -1182,7 +1182,7 @@ miscLCI = 'misc'.':'.(userIdentifierToken valueArgumentEntry)
 
 Auxiliary syntaxes for LCI syntax written in NTPL:
 
-```c++
+```bat
 attributeLCIPart = userIdentifierToken valueArgumentEntry?
 ```
 
@@ -1190,7 +1190,7 @@ attributeLCIPart = userIdentifierToken valueArgumentEntry?
 
 Below is the import syntax written in NTPL:
 
-```c++
+```bat
 import = 'import' 'mod'|'pkg'|'lib'|'type'|'scope'|'fn'|'marco'|'contract'|'obj' scopedIdentifier|grouping(scopedIdentifier)
 ```
 
@@ -1198,13 +1198,13 @@ import = 'import' 'mod'|'pkg'|'lib'|'type'|'scope'|'fn'|'marco'|'contract'|'obj'
 
 Below is the use syntax written in NTPL:
 
-```c++
+```bat
 use = 'use' ('impl'|'fn'|'obj'|'field'|'scope' userIdentifierToken|grouping(userIdentifierToken))|useForMarco|'*'
 ```
 
 Auxiliary syntaxes for use syntax written in NTPL:
 
-```c++
+```bat
 useForMarco = 'marco' userIdentifierToken|miscLCI|grouping(userIdentifierToken|miscLCI)
 ```
 
@@ -1212,7 +1212,7 @@ useForMarco = 'marco' userIdentifierToken|miscLCI|grouping(userIdentifierToken|m
 
 Below are the groupings syntax written in NTPL:
 
-```c++
+```bat
 grouping($1:exp) = '(' list($1, _, `{2,}`) ')'
 
 scopeIdentifierGrouping = '('scopeGroupingIdentifierEntryPart1|scopeGroupingIdentifierEntryPart2')'
@@ -1228,7 +1228,7 @@ fieldGrouping = '..'? 'mut'? '(' list(fieldPart1|fieldPart2, _, `{2,}`) ')' (':'
 
 Auxiliary syntaxes for groupings syntax written in NTPL:
 
-```c++
+```bat
 scopeIdentifierGroupingPart1 = grouping(userIdentifierToken)
 
 scopeIdentifierGroupingPart2 = '@' grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
