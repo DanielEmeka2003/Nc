@@ -6,7 +6,7 @@ It is encouraged to read this specification document using a dedicated markdown 
 
 An example of the Typora interface:
 
-![TyporaExample](/home/emekadaniel/Documents/Nc/Nc programming language/TyporaExample.png)
+![TyporaExample](TyporaExample.png)
 
 The official acronym of the programming language is **NPL** which stands for **N**c **P**rogramming **L**anguage - obviously - and the official source code file extension is `.npl`.
 
