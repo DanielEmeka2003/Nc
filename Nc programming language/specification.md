@@ -1,8 +1,8 @@
 # Nc Programming Language Official Specification
 
-This document defines the formal specifications of the nc programming language, the specification that would be used to write the compiler and interpreter of the nc programming language. As inferred from the previous statement, nc programming language is built to work for both compilation and an odd form of interpretation which would be discussed at length in this document. Unlike most formal specifications, this document is written in a beginner friendly way to facilitate faster understanding of the document for persons that have met the criteria of possessing rudimentary knowledge in programming concepts, NTPL and compiler development.
+This document defines the formal specification of the nc programming language which would be used to write the compiler of the nc programming language, form tutorials of the nc programming language and used as a source of reference to any questions, debates, academic talks or texts about the nc programming language. Nc programming language supports both **Just In Time** (***JIT***) and **Ahead Of Time** (***AOT***) compilation, **Just in Time** compilation would be used to implement its compile time features and by extension its not so formal interpreter, all would be discussed at length in this document. Unlike most formal specifications, this document is written in a beginner friendly way to facilitate faster understanding of the document for persons that have met the criteria of possessing rudimentary knowledge in programming concepts, nc text processing language and compiler development.
 
-It is encouraged to read this specification document using a dedicated markdown editor or viewer like **Typora** (_what I use to write this specification document with the only downside being the code section has no setting to turn off code wrapping_) other than to read this specification document on github, because it honestly looks ugly on github. I also currently use bat as the language of choice for the NTPL code sections because NTPL does not yet have syntax highlighting.
+It is encouraged to read this specification document using a dedicated markdown editor or viewer like **Typora** (_what I use to write this specification document with the only two downsides been the code section having no setting to turn off code wrapping and the lack of a font setting for the code section_) other than to read this specification document on Github, because it honestly looks ugly on Github. I also currently use `bat` and `bash` as the language of choice for the nc text processing language code sections because nc text processing language does not yet have syntax highlighting.
 
 An example of the Typora interface:
 
@@ -10,7 +10,7 @@ An example of the Typora interface:
 
 The official acronym of the programming language is **NPL** which stands for **N**c **P**rogramming **L**anguage - obviously - and the official source code file extension is `.npl`.
 
-To describe the text representation of the nc programming language, nc's very own text processing language is used, called **nc text processing language**  and referred to as **NTPL** in this document. You are advised to read the tutorial for the text processing language before reading this document.
+To describe the text representation of the nc programming language, nc's very own text processing language is used which is **nc text processing language** and would be referred to using its acronym or informal name **NTPL** in this document. You are advised to read the tutorial for the text processing language before reading this document.
 
 NPL is comprised of four basic parts, like all programming languages, which are:
 
@@ -39,7 +39,7 @@ There are two types of comments in NPL, namely:
 
 ### Discard Comments
 
-Are comments that are simply discarded by the compiler and interpreter after the fact (_generally after the tokenization phase of the compiler or a special comment parsing phase before tokenization_). 
+Are comments that are simply discarded by the compiler after the fact (_generally after the tokenization phase of the compiler or a special comment parsing phase before tokenization_). 
 
 Based on the categories of comments, there are two type of discard comments, namely:
 
@@ -66,7 +66,7 @@ Examples of the above syntax would be:
 
 Below is the multi-line discard comments syntax written in NTPL:
 
-```bat
+```bash
 multiLineDiscardComment = '<\'' any* '\'>'
 ```
 
@@ -83,7 +83,7 @@ An example of the above syntax would be:
 
 ### Document Comments
 
-Are comments that are retained by the compiler and interpreter after the fact (_generally after the tokenization phase of the compiler or a special comment parsing phase before tokenization_). Reason being that document comments serve the purpose of writing documentations or meaningful text that help describe the intent of code. Therefore, all document comments are retained by the compiler and interpreter to be used in generating documentations of code when prompted by the user, further explanation would be given in the semantic section.
+Are comments that are retained by the compiler after the fact (_generally after the tokenization phase of the compiler or a special comment parsing phase before tokenization_). Reason being that document comments serve the purpose of writing documentations or meaningful text that help describe the intent of code. Therefore, all document comments are retained by the compiler to be used in generating documentations of code when prompted by the user, further explanation would be given in the semantic section.
 
 Based on the categories of comments, there are two types of document comments, namely:
 
@@ -110,7 +110,7 @@ Examples of the above syntax would be:
 Below is the multi-line document comments syntax written in NTPL:
 
 ```bat
-multiLineDocumentComment = '<"' .* '">'
+multiLineDocumentComment = '<"' any* '">'
 ```
 
 An example of the above syntax would be:
@@ -235,7 +235,7 @@ There are two types of raw user identifier tokens, namely:
 
 Are raw user identifier tokens that allow the entry of language identifiers as user identifiers. Below is the syntax written in NTPL:
 
-```bat
+```bash
 rawLanguageIdentifierToken = 'r\''languageIdentifierToken
 ```
 
@@ -405,7 +405,7 @@ There are two types of text literal tokens, namely:
 
 Are text literal tokens that allow the entry of exactly one unicode character or text action that results in a unicode character. Below is the syntax written in NTPL:
 
-```bat
+```bash
 characterTextLiteralToken = '\'' any|text_action '\''
 ```
 
@@ -456,7 +456,7 @@ some good 🐔
 Are string text literal tokens that do not support the entry of text actions, meaning text actions simply have no effect in the string text literal token. Below is the syntax written in NTPL:
 
 ```bat
-unFormattedStringTextLiteralToken = '#'{n} '"' .* '"' '#'{n}
+unFormattedStringTextLiteralToken = '#'{n} '"' any* '"' '#'{n}
 ```
 
 > Remember, the curly brace operator in the above NTPL asks for at least one or exactly **n** iterations of the unicode character **#**, meaning the number of both **#** must be the same
@@ -481,7 +481,7 @@ stringTextLiteralToken = formattedStringTextLiteralToken|unformattedStringTextLi
 
 Are simply marker identifiers that specify the type of literal tokens in NPL (_more in the semantic section_). Below is the number literal token and text literal token syntax with their literal token tag specifications written in NTPL:
 
-```bat
+```bash
 numberLiteralToken = integerNumberLiteralToken|realNumberLiteralToken '\'' identifierToken
 
 textLiteralToken = identifierToken characterTextLiteralToken|stringTextLiteralToken
@@ -566,7 +566,7 @@ Like was previously said, high-level construct syntax describe the high-level la
 Needed NTPL function in this section:
 
 ```bat
-list($1:exp, $2:exp = ',', $3:op = `*`) = $1 ($2 $1)`$3`
+list($exp:exp, $separator:exp = ',', $op:op = `*`) = $exp ($separator $exp)`$op`
 ```
 
 ### Format for this section
@@ -596,15 +596,15 @@ fileContent = (object|function|marco|scope|import|contract|typeCreator)*
 Below is the type syntax written in NTPL:
 
 ```bat
-type($1:bool = true) = basicType($1)|functionType|contractType|valueReference|memoryAddressReferenceType|typeLCI|typeFromExpression
+type = basicType|functionType|contractType|valueReference|memoryAddressReferenceType|typeLCI|typeFromExpression
 ```
 
 Auxiliary syntaxes for types syntax written in NTPL:
 
 ```bat
-basicType($1:bool) = scopedIdentifier typeArgumentEntry($1)? comptimeValueArgumentEntry?
+basicType = scopedIdentifier typeArgumentEntry? comptimeValueArgumentEntry?
 
-functionType = 'fn' '(' list(type) ')' type|'!'
+functionType = 'fn' '('list(type)')' type|'!'
 
 contractType = '!' ('mut'? '&')? functionType|(userIdentifierToken typeArgumentEntry?)
 
@@ -626,7 +626,7 @@ valueParameter = 'obj' basicValueParameter|variadicValueParameter|valueParameter
 
 functionExpressionValueParameter = 'obj' functionExpressionValueParameterPart|functionExpressionValueParameterGrouping
 
-field($1:bool) = 'obj' fieldPart1|fieldPart2($1)|fieldGrouping
+field = 'obj' fieldPart1|fieldPart2|fieldGrouping
 ```
 
 Auxiliary syntaxes for objects syntax written in NTPL:
@@ -636,7 +636,7 @@ directInit = valueArgumentEntry
 
 indirectInit = '=' expression
 
-objectTypeEntry($1:bool = true) = ':' type if $1: (directInit|indirectInit)? else directInit|indirectInit
+objectTypeEntry($inMainObjectPart2:bool = false) = ':' type if $inMainObjectPart2: directInit|indirectInit else (directInit|indirectInit)?
 
 objectIdentifier = ('_'|('mut'? userIdentifierToken))|('_' userIdentifierToken)
 
@@ -644,9 +644,9 @@ unpackingEntry = '[' list(userIdentifierToken|'.'|unpackingEntry) ']'
 
 mainObjectPart1 = objectIdentifier (objectTypeEntry|indirectInit)?
 
-mainObjectPart2($1:bool = false) = 'mut'? unpackingEntry objectTypeEntry($1)|indirectInit
+mainObjectPart2 = 'mut'? unpackingEntry objectTypeEntry(true)|indirectInit
 
-basicValueParameter = objectIdentifier|unpackingEntry ':' type(false) indirectInit?
+basicValueParameter = objectIdentifier|unpackingEntry ':' type indirectInit?
 
 variadicValueParameter = variadicValueParameterPart ':' '..'? type
 
@@ -654,7 +654,7 @@ variadicValueParameterPart = ('..' 'mut'? userIdentifierToken)|('_' '..' userIde
 
 fieldPart1 = '..' 'mut'? userIdentifierToken ':' '..'? type
 
-fieldPart2($1:bool) = 'mut'? if $1: userIdentifierToken|unpackingEntry else userIdentifierToken ':' type
+fieldPart2 = 'mut'? userIdentifierToken|unpackingEntry ':' type
 
 functionExpressionValueParameterPart = objectIdentifier|unpackingEntry (':' type)?
 ```
@@ -690,7 +690,7 @@ valueArgumentEntry = '('list(valueArgument)')'
 
 comptimeValueArgumentEntry = '!'.'('list(valueArgument)')'
 
-typeArgumentEntry($1:bool) = '[' list(typeArgument($1)) ']'
+typeArgumentEntry = '['list(typeArgument']'
 ```
 
 Auxiliary syntaxes for arguments entry syntax: written in NTPL
@@ -712,7 +712,7 @@ whileLoopStatementHead = 'while' (list(object) ';')? expression (';' expression)
 
 expressionCodeArgument = '~>' expression
 
-typeArgument($1:bool) = attributeLCI? if $1: (type ('/'userIdentifierToken)?)|('/'userIdentifierToken) else (type ('/'userIdentifierToken)?)
+typeArgument = attributeLCI? (type ('/'userIdentifierToken)?)|('/'userIdentifierToken)
 ```
 
 ### Constraint Application Syntax
@@ -766,11 +766,11 @@ Below are the type-creators syntax written in NTPL:
 ```bat
 typeCreator = structTypeCreator|unionTypeCreator|valueDefCreator|uniqueTypeCreator
 
-structTypeCreator = 'struct' genericTypeCreatorIdentifier constraintApplication? ( '=' list(field(true)) )|';'
+structTypeCreator = 'struct' genericTypeCreatorIdentifier constraintApplication? ('=' list(field))|';'
 
 blankStructTypeCreator = 'struct' '=' list(field)
 
-unionTypeCreator = 'union' genericTypeCreatorIdentifier constraintApplication? ( '=' list(field(false)) )|';'
+unionTypeCreator = 'union' genericTypeCreatorIdentifier constraintApplication? ('=' list(field))|';'
 
 valueDefTypeCreator = 'valueDef' typeParameterEntry? userIdentifierToken|grouping(userIdentifierToken) '=' list(userIdentifierToken)
 
@@ -900,9 +900,9 @@ expressionType = '@'.type
 
 scopedIdentifier = (userIdentifierToken|'outer').scopedIdentifierPart?
 
-scopedIdentifierPart = (':'.list(userIdentifierToken|'outer'|grouping(scopedIdentifier), ':'))
+scopedIdentifierPart = ':'.(userIdentifierToken|'outer'|grouping(scopedIdentifier)).(':'.(userIdentifierToken|'outer'|grouping(scopedIdentifier)))*
 
-objectExpression = 'obj' ':' (type.valueArgumentEntry?)|grouping((type.valueArgumentEntry?))
+objectExpression = 'obj:' (type.valueArgumentEntry?)|grouping((type.valueArgumentEntry?))
 
 functionExpression = 'fn' captureSpace? functionExpressionValueParameterEntry type? block
 
@@ -929,11 +929,11 @@ elseBranch = 'else' block?
 
 ##### Precedence
 
-The layout of the primary expression syntaxes is setup such as to identify the various NPL precedence levels from basic NTPL expressions with the sole ambiguity being `dotBinaryExpression` which would be explained in this section. It works by simply making a precedence level into an NTPL function, for example, an `additiveBinaryExpression` has a lower precedence than a  `multiplicativeBinaryExpression` because the LHS and RHS operand call in an `additiveBinaryExpresion` asks for the `multiplicativeBinaryExpression`,  which would be fully syntactically evaluated first, that is collected into an expression, before the additive operators are paired with the `multiplicativeBinaryExpression` operands, that means an expression like so `2 + 5 * 4 - 3 / 6` equals this `2 + (5 * 4) - (4 / 6)`.
+The layout of the primary expressions syntax is setup such as to identify the various NPL precedence levels from basic NTPL expressions with the sole ambiguity being `dotBinaryExpression` which would be clarified in this section. It works by simply making a precedence level into an NTPL function and having the lower precedence level NTPL function call the higher precedence level NTPL function, for example, an `additiveBinaryExpression` has a lower precedence than a  `multiplicativeBinaryExpression` because the LHS and RHS operand call in an `additiveBinaryExpresion` asks for the `multiplicativeBinaryExpression`,  which would be fully syntactically evaluated first, that is collected into an expression, before the additive operators are paired with the LHS and RHS `multiplicativeBinaryExpression` operands, that means an expression like so `2 + 5 * 4 - 3 / 6` equals this `2 + (5 * 4) - (4 / 6)`.
 
 > Note that NPL does not exactly follow the mathematically and conventional programming precedence levels like most programming languages do, this would be further discussed in the high-level construct semantics section.
 
-The reason as to why it is setup this way was born out of convenience and that convenience later served an essential purpose. So, basically, it is convenient to represent and parse for precedence levels in the high-level syntax phase because it is at this phase where the tokens are collected into the various high-level construct syntaxes and instead of only parsing for dumb expressions (_expressions without the arrangement of precedence_), it is just better to parse for both the expressions and their precedence instead of parsing for dumb expressions then deferring precedence arrangement to the high-level construct semantic phase. This is only made possible because precedence level parsing has no error consequence, meaning that it does not result in error reporting, it is does, however, result in a logical consequence, that is logical errors in code due to mismatches in precedence levels. As for the essential purpose it later grew to serve, the layout of the precedence levels into separate NTPL functions creates an opportunity to ask for certain precedence levels while leaving out some, an example of this is in the constraint application syntax, where a `logicalBinaryExpression` is asked for, thereby hindering the open parsing of the `assignmentBinaryExpression` (_reason for using the `logicalBainryExpression` in the constraint application syntax to ask for expressions is because most other syntaxes, like struct, union, contract, impl and so on, that make use of the constraint application syntax ask for `=` after the expression of the constraint application, so to prevent parsing conflict, `assignmentBinaryExpression` is not asked for openly, rather its immediate higher precedence level is asked for instead, so entry of an `assignmentBinaryExpression` must be done with the `precedenceEntry` which encloses the `assignmentBinaryExpression` thereby preventing parsing conflict_).
+The reason as to why it is setup this way was born out of convenience and that convenience later served an essential purpose. So, basically, it is convenient to represent and parse for precedence levels in the high-level construct syntax phase because it is optimal to parse for the expressions while also arranging them into precedence levels instead of parsing only for dumb expressions (_expressions without the arrangement of precedence_) in the high-level construct syntax phase then deferring precedence arrangement to the high-level construct semantic phase. This is only made possible because precedence level parsing has no compiler error consequence, meaning that it does not result in a compiler error, it is does, however, result in a logical error consequence, that is logical errors in code due to mismatches in precedence levels. As for the essential purpose it later grew to serve, the layout of the precedence levels into separate NTPL functions creates an opportunity to ask for certain precedence levels while leaving out some, an example of this is in the constraint application syntax, where a `logicalBinaryExpression` is asked for, thereby hindering the open parsing of the `assignmentBinaryExpression` (_reason for using the `logicalBainryExpression` in the constraint application syntax to ask for expressions is because the syntaxes, like struct, union, contract, impl and so on, that make use of the constraint application syntax ask for `=` after the expression of the constraint application, so to prevent parsing conflict, `assignmentBinaryExpression` is not asked for openly, rather its immediate higher precedence level is asked for instead, so entry of an `assignmentBinaryExpression` must be done with the `precedenceEntry` which encloses the `assignmentBinaryExpression` thereby preventing parsing conflict_).
 
 ###### The Ambiguity of `dotBinaryExpression`
 
@@ -1066,7 +1066,7 @@ So, the programming language takes such power from the programmer and defines th
    ```
    : Due to the above two rules, the below comprises of individual expressions that share the same line, that is an identifier, collection expression without a tag and erroneous precedence entry, so,they must be delimited by the expression delimiter
    ➜ a [] ()
-   ⮞ a; []; ()
+   ➜ a; []; ()
    
    : Leaving expressions like the below clear and readable
    ➜ a[]
@@ -1077,7 +1077,7 @@ So, the programming language takes such power from the programmer and defines th
 
 > Note that rules 1 and 2 could actually be represented in NTPL by using its no white-space operator to ask for the absence of white-space when parsing collection expressions and function calls like some syntaxes already do, but it is just more proper to explain here in textual format than to represent in NTPL.
 
-**Gaps in the rules**
+**Gap in the rules**
 
 The above rules do not still protect from syntaxes that make use of the same operator but in different positions, like the `-` which is both a binary and unary prefix operator. For this, the user/programmer is meant to show intent of what exactly is desired to be parsed like. An example like the below:
 
@@ -1105,7 +1105,7 @@ All the above is parsed as a binary expression, but the programmer can choose to
 
 **As for the reason why I designed NPL with such syntax conflicts in the first place**
 
-I did it to keep with the conventional syntaxes in the programming and mathematical space, mainly because the conventional syntaxes are sane and intuitive to reason about, for example, it is easier to imagine an array syntax and by extension collection expressions like so `[1, 2, 3]` in programming because languages like python, javascript and PHP already sets precedence for this and it is easier to imagine a function call syntax like this `foo()` because all procedural and imperative languages make use of such syntax and it is also easier to imagine the precedence entry syntax like this `(2 + 3) * 4` because years of precedence has already been set in mathematics and subsequently programming. Expression grouping is the odd ball here as I could have literally made it start with any other brace or set of unicode characters, but the reason I stuck with `()` is because using a non ASCII  brace, like `〈〉` or `❴❵`, simply isn't as aesthetically pleasant as this `()` and using a set of unicode characters, like this `%()` or `$()` is to verbose for my liking, so ultimately it came down to my design preference.
+I did it to keep with the conventional syntaxes in the programming and mathematical space, mainly because the conventional syntaxes are sane and intuitive to reason about, for example, it is easier to imagine an array syntax and by extension collection expressions like so `[1, 2, 3]` in programming because languages like python, javascript and PHP already sets precedence for this and it is easier to imagine a function call syntax like this `foo()` because all procedural and imperative languages make use of such syntax and it is also easier to imagine the precedence entry syntax like this `(2 + 3) * 4` because years of precedence has already been set in mathematics and subsequently programming. Expression grouping is the odd ball here as I could have literally made it start with any other brace or set of unicode characters, but the reason I stuck with `()` is because using a non ASCII  brace, like `〈〉` or `❴❵`, simply isn't as aesthetically pleasant and easy to type as this `()` and using a set of unicode characters, like this `%()` or `$()`, is to verbose for my liking, so ultimately it came down to my design preference.
 
 ### Block Syntax
 
@@ -1171,13 +1171,13 @@ whileLoopStatement = 'while' (list((attributeLCI? object)) ';')? expression? (';
 Below are the LCIs syntax written in NTPL:
 
 ```bat
-attributeLCI = 'at'.':'.(attributeLCIPart|grouping(atrributeLCIPart))
+attributeLCI = 'at:'.(attributeLCIPart|grouping(atrributeLCIPart))
 
-expressionLCI = 'exp'.':'.(userIdentifierToken|grouping(userIdentifierToken))
+expressionLCI = 'exp:'.(userIdentifierToken|grouping(userIdentifierToken))
 
-typeLCI = 'ty'.':'.(userIdentifierToken (valueArgumentEntry|typeArgumentEntry)?)
+typeLCI = 'ty:'.(userIdentifierToken (valueArgumentEntry|typeArgumentEntry)?)
 
-miscLCI = 'misc'.':'.(userIdentifierToken valueArgumentEntry)
+miscLCI = 'misc:'.(userIdentifierToken valueArgumentEntry)
 ```
 
 Auxiliary syntaxes for LCI syntax written in NTPL:
@@ -1231,7 +1231,7 @@ Auxiliary syntaxes for groupings syntax written in NTPL:
 ```bat
 scopeIdentifierGroupingPart1 = grouping(userIdentifierToken)
 
-scopeIdentifierGroupingPart2 = '@' grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
+scopeIdentifierGroupingPart2 = '@'.(grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?)
 ```
 
 ## High-Level Construct Semantic
@@ -1239,9 +1239,8 @@ scopeIdentifierGroupingPart2 = '@' grouping(userIdentifierToken) typeParameterEn
 Like was previously said, high-level construct semantic details the meaning of the various syntax, where they are expected to be, their use and their low-level implementation. The following final section of this document specification would detail the various semantics of the **nc programming language**. Below are the list of the various high-level semantics:
 
 - Types
-- Context identifiers
 
-
+**Remember to write a supplementary info for groupings, because their are some invalid groupings [Very Important] Also, write about associativity because it is represented in NTPL and the reader should be made aware of it**
 
 
 

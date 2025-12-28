@@ -108,10 +108,10 @@ Due to NPL not having syntax highlighting yet in the code format section of mark
 - Hello world example
 
 ```rust
-import marco std:print
+import marco std:io:print
 
 fn main {
-    print("Hello World(from nc programming language)")
+    print("Hello World from NPL :)")
 }
 ```
 
@@ -119,7 +119,7 @@ fn main {
 
 ```rust
 fn main {
-    obj _ r"Do you love 🧸s?" = true
+    obj _ r"Do you love 🐻s?" = true
     obj _ r:for = "Damn! using the `for` language identifier as a user identifier"
     obj _ r"Are you an ape(🦍)?" = true
     obj _ r:struct = "Wow! using the `struct` language identifier as a user identifier"
@@ -129,7 +129,7 @@ fn main {
 - References example
 
 ```rust
-import type std:alloc:basic
+import scope std:mem:allocator
 
 fn main {
     obj a: ui4()
@@ -145,18 +145,17 @@ fn value_ref(obj _: &ui4, obj _: mut&ui4) {}
 fn memory_address_ref(obj _: *ui4, obj _: mut*ui4) {}
 
 fn alloc_value_ref(obj alloc: {&}ui4) {
-    obj: allocator:basic[ui4].deallocate(alloc)
+    obj: allocator:basic[ui4].free(alloc)
 }
 fn alloc_memory_address_ref(obj alloc: {*}ui4) {
-    obj: allocator:basic[ui4].deallocate(alloc)
+    obj: allocator:basic[ui4].free(alloc)
 }
 ```
 
 - Sum type creator example
 
 ```rust
-import type std:string
-import marco std:printf
+import marco std:io:printf
 
 union realNumber = obj (real4: r4, real8: real8)
 
@@ -174,8 +173,8 @@ fn main {
 - Value Unpacking examples
 
 ```rust
-import type std:string
-import marco std:printf
+import type std:string:string
+import marco std:io:printf
 
 struct product = obj (name: string, id: ui8, amount: ui4)
 
@@ -194,6 +193,7 @@ fn main {
     obj bicycle: product("Bicycle", 100₂₈, 102)
     
     &bicycle.display()
+    >! "Due to redefined precedence levels in NPL, the above expression evaluates as `((&bicycle).display)()`"
 }
 
 >! "Value unpacking can also be applied to and-fields(objects in struct) and normal objects too"
@@ -202,22 +202,22 @@ fn main {
 - Contract and impl with runtime polymorhism example
 
 ```rust
-import marco std:printf
+import marco std:io:printf
 
 contract[type Self] animal =
-fn sound(obj self: &Self) &str;
-fn name(obj self: &Self) &str;
+fn sound(obj self: Self) &str;
+fn name(obj self: Self) &str;
 end
 
 struct (dog, cat);
 
 scope @dog =
 impl[dog] animal =
-fn sound(obj _: &Self) &str {
+fn sound(obj _: dog) &str {
     "woof"
 }
 
-fn name(obj _: &Self) &str {
+fn name(obj _: dog) &str {
     "Dog"
 }
 end
@@ -225,11 +225,11 @@ end scope
 
 scope @cat =
 impl[cat] animal =
-fn sound(obj _: &Self) &str {
+fn sound(obj _: cat) &str {
     "meow"
 }
 
-fn name(obj _: &Self) &str {
+fn name(obj _: cat) &str {
     "Cat"
 }
 end
@@ -250,9 +250,9 @@ fn main {
 - Constraint application and compile time polymorphism using type parameters example
 
 ```rust
-import type std:string
+import type std:string:string
 
-marco add[type T](obj (lhs, rhs): T) T apply @T eq string or eq @ui4 {
+marco add[type T](obj (lhs, rhs): T) T apply @T eq @string or eq @ui4 {
     lhs + rhs
 }
 
@@ -275,7 +275,7 @@ fn sum(obj ..args: ui4) ui4 apply variadics(args).size gt 2 {
     result
 }
 
-import marco std:printf
+import marco std:io:printf
 
 fn main {
     obj sum = sum(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -292,7 +292,7 @@ contract[type Self[?]] functor[type A] =
 fn fmap[type (B, Fn)](obj (self: Self[A], fcn: Fn)) Self[B] apply @Fn impls fn(A)B;
 end
 
-import type std:(arrayList, maybe)
+import type std:(ds:arrayList, misc:maybe)
 
 >! "Type constructor arrayList implementing functors"
 scope @arrayList[type T] =
@@ -330,7 +330,7 @@ fn main {
 - Value argument list generators, collection expressions and static arrays example
 
 ```rust
-import marco std:printf
+import marco std:io:printf
 
 fn main {
     obj static_array: arr[ui4]!(1024)
@@ -345,7 +345,7 @@ fn main {
 - Matrix and vector implementation using static arrays and collection expressions example
 
 ```rust
-import marco std:printf
+import marco std:io:printf
 
 fn main {
     >! "Matrix"
@@ -402,40 +402,40 @@ marco misc:operator+(obj (lhs, rhs): vector!(dimensions)) vector!(dimensions) {
 }
 
 >! "The `use` keyword imports type properties of the uniqued type which is a static array in this case"
-use marco misc:operator.[] >! "For (1-based)indexing"
-use impl display >! "For printing values in a displayable format"
+use marco operator.[] 	>! "For (1-based)indexing"
+use impl display 		>! "For printing values in a displayable format"
 
 end scope
 ```
 
-- Run time type introspection example
+- Compile time type introspection example
 
 ```rust
-import marco std:printf
+import marco std:io:printf
 
 fn main {
 	obj person_struct = exp:getTypeCreatorMetadata[person, array]()
 
-    printf("TypeCreator [$(person_struct.kind)]\nType [$(person_struct.typeName)]\n")
+    printf("TypeCreator\t[$(person_struct.kind)]\nType\t\t[$(person_struct.typeName)]\n")
     
     person_struct => fieldInfoList {
         obj fieldInfoListIter = &fieldInfoList.iter()
 
         >! "Extract the first element out of the iterator"
         fieldInfoListIter.next() => some(fieldInfo) {
-        	printf("AndFields [$(fieldInfo)")
+        	printf("AndFields\t[$(fieldInfo.name):$(fieldInfo.typeName)")
         }else {}
         
         for fieldInfo in fieldInfoListIter {
-            printf(", $(fieldInfo)")
+            printf(", $(fieldInfo.name):$(fieldInfo.typeName)")
         }
         printf("]\n")
     }else {}
     
     >! "Prints:" 
-    >! "TypeCreator [struct]"
-    >! "Type [person]"
-    >! "AndFields [name:&str, age:ui1, location:location]"
+    >! "TypeCreator	[struct]"
+    >! "Type		[person]"
+    >! "AndFields	[name:&str, age:ui1, location:location]"
 }
 
 struct person = obj (name: &str, age: ui1, location: location)
