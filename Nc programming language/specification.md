@@ -1,6 +1,6 @@
 # Nc Programming Language Official Specification
 
-This document defines the formal specification of the nc programming language which would be used to write the compiler of the nc programming language, form tutorials of the nc programming language and used as a source of reference to any questions, debates, academic talks or texts about the nc programming language. Nc programming language supports both **Just In Time** (***JIT***) and **Ahead Of Time** (***AOT***) compilation, **Just in Time** compilation would be used to implement its compile time features and by extension its not so formal interpreter, all would be discussed at length in this document. Unlike most formal specifications, this document is written in a beginner friendly way to facilitate faster understanding of the document for persons that have met the criteria of possessing rudimentary knowledge in programming concepts, nc text processing language and compiler development.
+This document defines the formal specification of the nc programming language which would be used to write the compiler of the nc programming language, form tutorials for the nc programming language and be the source of reference to any questions, debates, academic talks or texts about the nc programming language. Nc programming language supports both **Just In Time** (***JIT***) and **Ahead Of Time** (***AOT***) compilation, **Just in Time** compilation would be used to implement its compile time features and by extension its not so conventional interpreter, all would be discussed at length in this document. Unlike most formal specifications, this document is written in a beginner friendly manner to facilitate faster understanding of the document for persons that have met the criteria of possessing rudimentary knowledge in programming concepts, the nc text processing language and compiler development.
 
 It is encouraged to read this specification document using a dedicated markdown editor or viewer like **Typora** (_what I use to write this specification document with the only two downsides been the code section having no setting to turn off code wrapping and the lack of a font setting for the code section_) other than to read this specification document on Github, because it honestly looks ugly on Github. I also currently use `bat` and `bash` as the language of choice for the nc text processing language code sections because nc text processing language does not yet have syntax highlighting.
 
@@ -358,7 +358,7 @@ Are literal tokens that allow the entry of any unicode character and something c
 
 #### Text Actions
 
-Are a set combination of unicode characters starting with `\` unicode character that instructs the language to perform a particular action in the text literal token. Below are the syntax list of the various text actions written in NTPL:
+Are a set combination of unicode characters starting with `\` unicode character that instructs the language to perform a particular action in the text literal token. Below are the syntax list of the various text actions written as NTPL expressions:
 
 - `r'\n'` : inserts the newline unicode character
 
@@ -691,6 +691,8 @@ valueArgumentEntry = '('list(valueArgument)')'
 comptimeValueArgumentEntry = '!'.'('list(valueArgument)')'
 
 typeArgumentEntry = '['list(typeArgument']'
+
+attributeLCIArgumentEntry = '('attributeLCIArgumentEntryPart1|attributeLCIArgumentEntryPart2')'
 ```
 
 Auxiliary syntaxes for arguments entry syntax: written in NTPL
@@ -713,6 +715,10 @@ whileLoopStatementHead = 'while' (list(object) ';')? expression (';' expression)
 expressionCodeArgument = '~>' expression
 
 typeArgument = attributeLCI? (type ('/'userIdentifierToken)?)|('/'userIdentifierToken)
+
+attributeLCIArgumentEntryPart1 = userIdentifierToken '$'
+
+attributeLCIArgumentEntryPart2 = ('scope' 'in')? 'mod'|'pkg'
 ```
 
 ### Constraint Application Syntax
@@ -836,7 +842,7 @@ Auxiliary syntaxes for scope syntax  written in NTPL:
 ```bat
 scopeBody = '=' (scopeContentPart|impl|use|import)* 'end scope'
 
-scopeIdentifier = (userIdentifierToken|typeScopeIdentifier)|scopeIdentifierGrouping
+scopeIdentifier = (userIdentifierToken|typeScopeIdentifier)|grouping(userIdentifierToken|typeScopeIdentifier)
 
 scopeContentPart = attributeLCI? function|marco|typeCreator|object|scope
 
@@ -850,7 +856,7 @@ Below are the expressions syntax written in NTPL:
 ```bat
 expression = attributeLCI? assignmentBinaryExpression
 
-assignmentBinaryExpression = logicalBinaryExpression (assignmentBinaryOperator assignmentBinaryExpression)
+assignmentBinaryExpression = list(logicalBinaryExpression, assignmentBinaryOperator)
 
 logicalBinaryExpression = list(equalityBinaryExpression, logicalBinaryOperator)
 
@@ -858,11 +864,11 @@ equalityBinaryExpression = list(relationalBinaryExpression, equalityBinaryOperat
 
 relationalBinaryExpression = list(rangeBinaryExpression, relationalBinaryOperator)
 
-rangeBinaryExpression = list(additiveBinaryExpression, '~'|'.~')
+rangeBinaryExpression = list(additiveBinaryExpression, '~'|'~.')
 
 additiveBinaryExpression = list(multiplicativeBinaryExpression, '+'|'-')
 
-multiplicativeBinaryExpression = list(exponentiationBinaryExpression, '*'|'/'|'%'|'/%')
+multiplicativeBinaryExpression = list(exponentiationBinaryExpression, '*'|'/'|'%')
 
 exponentiationBinaryExpression = list(fromBinaryExpression, '^')
 
@@ -884,7 +890,9 @@ logicalBinaryOperator = 'not'? 'and'|'or'|'xor'
 
 equalityBinaryOperator = 'not'? 'eq'|'in'
 
-relationalBinaryOperator = 'lt'|'gt' ('and'|'or' equalityBinaryOperator|'lt'|'gt')?
+relationalBinaryOperator = 'lt'|'gt' relationalBinaryOperatorCombinations?
+
+relationalBinaryOperatorCombinations = 'and'|'or' equalityBinaryOperator|'lt'|'gt'
 
 unaryPostfixOperator = functionCall|('.['expression']')|orFieldQueryConditionalExpression
 
@@ -925,13 +933,11 @@ mainOrFieldQueryPart2 = ('('userIdentifierToken')')|('['list(userIdentifierToken
 elseBranch = 'else' block?
 ```
 
-#### Supplementary info
+#### Supplementary Info
 
 ##### Precedence
 
-The layout of the primary expressions syntax is setup such as to identify the various NPL precedence levels from basic NTPL expressions with the sole ambiguity being `dotBinaryExpression` which would be clarified in this section. It works by simply making a precedence level into an NTPL function and having the lower precedence level NTPL function call the higher precedence level NTPL function, for example, an `additiveBinaryExpression` has a lower precedence than a  `multiplicativeBinaryExpression` because the LHS and RHS operand call in an `additiveBinaryExpresion` asks for the `multiplicativeBinaryExpression`,  which would be fully syntactically evaluated first, that is collected into an expression, before the additive operators are paired with the LHS and RHS `multiplicativeBinaryExpression` operands, that means an expression like so `2 + 5 * 4 - 3 / 6` equals this `2 + (5 * 4) - (4 / 6)`.
-
-> Note that NPL does not exactly follow the mathematically and conventional programming precedence levels like most programming languages do, this would be further discussed in the high-level construct semantics section.
+Precedence defines the order of which operators evaluate their operands first, by making operators with higher precedence evaluate their operands before operators with lower precedence (_From here on out they would be referred to as precedence levels_). The layout of the primary expressions syntax is setup such as to identify the various NPL precedence levels from basic NTPL expressions with the sole ambiguity being `dotBinaryExpression` which would be clarified in this section. It works by simply making a precedence level into an NTPL function and having the lower precedence level NTPL function call the higher precedence level NTPL function, for example, an `additiveBinaryExpression` has a lower precedence than a  `multiplicativeBinaryExpression` because the LHS and RHS operand call in an `additiveBinaryExpresion` asks for the `multiplicativeBinaryExpression`,  which would be fully syntactically evaluated first, that is collected into an expression, before the additive operators are paired with the LHS and RHS `multiplicativeBinaryExpression` operands, that means an expression like so `2 + 5 * 4 - 3 / 6` equals this `2 + (5 * 4) - (4 / 6)`. Implementation can then easily be done in code by making each individual NTPL function in primary expressions syntax into a function, procedure, routine, method or whatever name your language of choice calls runnable blocks of code with possible parameter entry and return types.
 
 The reason as to why it is setup this way was born out of convenience and that convenience later served an essential purpose. So, basically, it is convenient to represent and parse for precedence levels in the high-level construct syntax phase because it is optimal to parse for the expressions while also arranging them into precedence levels instead of parsing only for dumb expressions (_expressions without the arrangement of precedence_) in the high-level construct syntax phase then deferring precedence arrangement to the high-level construct semantic phase. This is only made possible because precedence level parsing has no compiler error consequence, meaning that it does not result in a compiler error, it is does, however, result in a logical error consequence, that is logical errors in code due to mismatches in precedence levels. As for the essential purpose it later grew to serve, the layout of the precedence levels into separate NTPL functions creates an opportunity to ask for certain precedence levels while leaving out some, an example of this is in the constraint application syntax, where a `logicalBinaryExpression` is asked for, thereby hindering the open parsing of the `assignmentBinaryExpression` (_reason for using the `logicalBainryExpression` in the constraint application syntax to ask for expressions is because the syntaxes, like struct, union, contract, impl and so on, that make use of the constraint application syntax ask for `=` after the expression of the constraint application, so to prevent parsing conflict, `assignmentBinaryExpression` is not asked for openly, rather its immediate higher precedence level is asked for instead, so entry of an `assignmentBinaryExpression` must be done with the `precedenceEntry` which encloses the `assignmentBinaryExpression` thereby preventing parsing conflict_).
 
@@ -957,7 +963,68 @@ The above unequivocally parses for the `unaryPrefixExpression` first which has t
 
 The above parses for the dot operator then scoped Identifier related syntax and finally parses for `unaryPostfixOperator`, the programming language gives the dot operator a higher precedence level than the postfix operator, so, the dot operator and its RHS operands (_`scopedIdentifier|scopedIdentifierPart`_) must be syntactically evaluated first before the `unaryPostfixOperator`. 
 
-So, a syntactic evaluation of this `a.b()` would result in this `(a.b)()`, not this `a.(b())`, thereby keeping with the sane and intuitive programming precedence convention in programming languages that make use of the OOP method (_function_) call style.
+So, a syntactic evaluation of this `a.b()` would result in this `(a.b)()`, not this `a.(b())`, thereby keeping with the sane and intuitive programming precedence convention in programming languages that make use of the OOP method (_member function_) call style.
+
+###### Precedence List
+
+The below table shows the precedence levels of the various operators in NPL with the operators written as NTPL expressions, just to compliment what is already clearly stated using NTPL in the primary expressions syntax.
+
+| Rank | Operator                                                     |
+| ---- | ------------------------------------------------------------ |
+| 12th | Binary assignment operators `'='`, `':='` , `'+='`, `'-='`, `'*='`, `'/='`, `'%='`, `'^='`, `'=-'`, `'=/'`, `'=%'` |
+| 11th | Binary logical operators `'and'`, `'or'`, `'xor'`            |
+| 10th | Binary equality operators `'eq'`, `'in'`                     |
+| 9th  | Binary relational operators `'lt'`, `'gt'`                   |
+| 8th  | Binary range operators `'~'`, `'~.'`                         |
+| 7th  | Binary additive operators `'+'`, `'-'`                       |
+| 6th  | Binary multiplicative operators `'*'`, `'/'`, `'%'`          |
+| 5th  | Binary exponentiation operator `'^'`                         |
+| 4th  | Binary from operator `'from'`                                |
+| 3rd  | Unary postfix operators `functionCall`, `'.['expression']'`, `orFieldQueryConditionalExpression` |
+| 2nd  | Binary dot operator `.`                                      |
+| 1st  | Unary prefix operators `'-'`, `'not'`, `'mut'? '&'|'addressof'` |
+
+There is also the notable mention of primary expressions from the NTPL of primary expressions syntax, which stay at a level unconstrained by precedence levels.
+
+###### Precedence Deviation
+
+Note that NPL does not exactly follow the precedence levels in conventional programming and mathematics, the following are the precedence deviations in NPL:
+
+1. Binary logical operators precedence deviation
+
+   In conventional programming and mathematics, there are defined precedence levels for the ***and***, ***or*** and ***xor*** binary logical operators which are stated in the table below:
+
+   | Rank | Operator |
+   | ---- | -------- |
+   | 3rd  | `or`     |
+   | 2nd  | `xor`    |
+   | 1st  | `and`    |
+
+   But in NPL, they all have the same precedence levels, this is done for two reasons, one, to shorten the amount of precedence levels a programmer has to learn and worry about and two, I see them as unintuitive primarily because I always encountered logical errors when using them without precedence entry, so I removed them to force the use of precedence entry whenever they are to be dealt with instead of relying on their precedence that may come back to bite you in the form of logical errors.
+
+2. Unary prefix operators precedence deviation
+
+   In conventional programming, the defined precedence level for all unary operators is always lower than the binary dot operator (_member operator in some languages_), but in NPL, the unary prefix operator has a higher precedence level than the binary dot operator, this is done for semantic ergonomics in the programming language that trades-off one convenience for another. In C or C++, for example, the use of this `&(a.b)` expression is more prevalent than the use of this `(&a).b` expression in the programming language (_in fact, it is not even a semantically valid expression in the programming language_), so, the set precedence level in the programming language allows for the entry of the more prevalent expression without precedence entry like so `&a.b`, but in NPL, the use of this `(&a).b` expression is more prevalent than the use of this `&(a.b)` expression, so, the precedence level of NPL is designed to favour the entry of the more prevalent expression without precedence entry like so `&a.b`. The reason why `(&a).b` is the prevalent expression can be inferred from the semantic section when read.
+
+##### Associativity
+
+While precedence defines the order of which operators evaluate their operands first, associativity defines the order of evaluation when operators of the same precedence are involved in the same expression. The order associativity defines is always **left to right** or **right to left**, with a **left to right** associativity starting operator evaluation of their operands from the *left* and the **right to left** associativity starting operator evaluation of their operands from the *right*, an example `2 + 3 - 4 - 9` would be interpreted as follows, the language gives additive operators (_`+` & `-`_) a left to right associativity, so the following would be evaluated like this `(((2 + 3) - 4) - 9)` which results in  `-8`, having a right to left associativity instead would make it to be evaluated like this `(2 + (3 - (4 - 9)))` which results in `10` . In NPL, all associativity of operators of the same precedence level are **left to right** except for prefix operators which are **right to left** for good reason. And like with precedence levels, the layout of the primary expressions syntax is also setup to identify associativity. It works by simply calling the higher precedence level as the RHS for binary expressions to achieve **left to right** associativity, calling the the current precedence level as the RHS for binary expressions to achieve **right to left** associativity and finally calling the current precedence level after the various prefix operators as the only operand for unary postfix operators. It is logically impossible to implement **right to left** associativity for unary prefix operators. An example of changing a **left to right** associative to a **right to left** associative using `assignmentBinaryExpression`:
+
+```bat
+assignmentBinaryExpression = list(logicalBinaryExpression, assignmentBinaryOperator)
+```
+
+Turning into a **right to left** associative:
+
+```bat
+assignmentBinaryExpression = logicalBinaryExpression (assignmentBinaryOperator assignmentBinaryExpression)
+```
+
+Languages like C and C++ use the above because assignment binary expressions are value returning, which makes it logical for it to be **right to left** associative, for example, `a = b = c` evaluates to this `(a = (b = c))`, but since assignment binary expressions are not value returning (_would be explained in the semantic section_), it is irrelevant what associativity they get, so I chose **left to right** mostly to avoid needless recursion in code.
+
+Implementation of associativity is a non issue because implementing precedence levels with the above guide already implements associativity.
+
+> Note that this associativity section is not pivotal to the specification of this document, because it neither contains a problem to address nor a good practice to adhere to, it instead just serves as an educational piece for readers, most especially compiler developers, curious about the specific structure of the primary expressions syntax and what exactly associativity is.
 
 ##### White-Space dependent parsing
 
@@ -1183,7 +1250,7 @@ miscLCI = 'misc:'.(userIdentifierToken valueArgumentEntry)
 Auxiliary syntaxes for LCI syntax written in NTPL:
 
 ```bat
-attributeLCIPart = userIdentifierToken valueArgumentEntry?
+attributeLCIPart = userIdentifierToken attributeLCIArgumentEntry?
 ```
 
 ### Import Syntax
@@ -1213,9 +1280,7 @@ useForMarco = 'marco' userIdentifierToken|miscLCI|grouping(userIdentifierToken|m
 Below are the groupings syntax written in NTPL:
 
 ```bat
-grouping($1:exp) = '(' list($1, _, `{2,}`) ')'
-
-scopeIdentifierGrouping = '('scopeGroupingIdentifierEntryPart1|scopeGroupingIdentifierEntryPart2')'
+grouping($exp:exp) = '('list($exp, _, `{2,}`)')'
 
 objectGrouping = 'mut'? grouping(mainObjectPart1|mainObjectPart2(true)) (objectTypeEntry|indirectInit)?
 
@@ -1226,13 +1291,11 @@ functionExpressionValueParameterGrouping = 'mut'? '(' list(functionExpressionVal
 fieldGrouping = '..'? 'mut'? '(' list(fieldPart1|fieldPart2, _, `{2,}`) ')' (':' '..'? type)?
 ```
 
-Auxiliary syntaxes for groupings syntax written in NTPL:
+#### Supplementary Info
 
-```bat
-scopeIdentifierGroupingPart1 = grouping(userIdentifierToken)
 
-scopeIdentifierGroupingPart2 = '@'.(grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?)
-```
+
+
 
 ## High-Level Construct Semantic
 
@@ -1240,7 +1303,7 @@ Like was previously said, high-level construct semantic details the meaning of t
 
 - Types
 
-**Remember to write a supplementary info for groupings, because their are some invalid groupings [Very Important] Also, write about associativity because it is represented in NTPL and the reader should be made aware of it**
+**Remember to write a supplementary info for groupings, because their are some invalid groupings [Very Important]**
 
 
 

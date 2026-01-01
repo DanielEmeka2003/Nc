@@ -1,16 +1,20 @@
 # Nc Programming Language
 
-Nc programming language or informally called NPL is a next generation invasive constraint based, strongly typed, memory safe programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
+Nc programming language or informally called NPL is an invasive constraint based, strongly typed, memory safe, platform aware, next generation programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
 
-It is a language that is designed from its infancy to accommodate every known area of programming and also, importantly, make a programmer's experience near equal or comparable to programming languages specifically designed for those areas. The language does this by centralizing specific functionalities of those areas of programming thereby making itself aware of the various programming areas then dictates when a programmer can use said functionalities. An example of said functionality would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, game design programming language, embedded systems programming language, scripting programming language and many more (_although it cannot be used as a data language, that is **JSON** or **XML**, nc data representation language already serves such purpose and is natively integrated in nc programming language_).
+It is a programming language designed from its infancy to accommodate every known area of programming and also more importantly, make a programmer's experience equal to, comparable or better than programming languages specifically designed for those areas. The language does this by centralizing specific functionalities of those programming areas thereby making itself aware of the various areas then dictates when a programmer can use said functionalities based on its settings, the programming areas are referred to as platforms in NPL. An example of said feature would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, game design programming language, embedded systems programming language, scripting programming language and many more (_although it cannot be used as a data language, that is the use cases of **JSON**, **XML** or **TOML**, nc data representation language already serves such purpose and is natively integrated in NPL_).
 
-It is essentially a programming area aware language and it is for this reason I call the programming language a **TGPL** (_Truly General Purpose Programming Language_).
+It is basically a platform (_programming area_) aware programming language and it is for this reason I call the programming language a **TGPL** (_Truly General Purpose Programming Language_), but it is a term it has to earn by its actions not words.
+
+## My Naivete (31/12/2025)
+
+The above insanely ambitious goal of the programming language implies a gross naivete on my part, as of the time of writing this document, I am the sole contributor to this project, I have no big company backing, I have no financing and my knowledge of the general programming space needed to implement the platform (*programming area*) aware feature is minuscule, abstract and laughable at best, only thing I have in ample supply is my determination, optimism and fictitious mindset, but that has no concrete pragmatic benefit to this project. So, take what you read here with a grain of salt till you see application software written in the programming language and some form of adoption from the programming community. The reasons why I started this project in the first place can be read in my **Dear God, Why?** document.
 
 ## Nc Programming Language Features
 
 The following describes some of the many features of the nc programming language:
 
-- Positional base number entry from bases 2 to 36 (For both integer and real numbers)
+- Positional base number entry from bases 2 to 36 (_for both integer and real numbers_)
 - Raw user identifier entry
   - Raw user language identifier entry
   - Raw user string identifier entry
@@ -18,92 +22,99 @@ The following describes some of the many features of the nc programming language
 - Character entry
 - Multi-line string entry
 - Embedded raw strings
-- Text action entry (Known as escape sequences in C, C++ and most other programming languages)
+- Text action entry (_known as escape sequences in C, C++ and most other programming languages_)
 - High width integers up to 512-bytes or 4096-bits
 - Platform integers
-- IEEE-745 binary floating point numbers (Reluctantly added)
-- Nc real numbers (A custom decimal floating point implementation native to the language)
-- Strongly typed language
+- IEEE-745 binary floating point numbers (*reluctantly added*)
+- Nc real numbers (*a custom decimal floating point implementation native to the language*)
+- Strongly typing
 - No implicit conversions and no sub-typing
 - Highly expressive type system
-- Stack array type(An array data structure that only uses the stack memory space invented just for the language)
+- Stack array type (_an array data structure that only uses the stack memory space invented just for the language_)
 - Static array type
 - Integer range types
 - Failure handling types
 - Zero sized types
-- Product type creators (Similar to structs in C and Rust)
-- Sum type creators (Similar to enums in Rust and unions in C and C++)
-- Semantic type creators (Similar to derived types in Ada but with added semantics)
-- Semantic ranged integer type creators (Similar to Integers in Ada)
-- Value definition type creators (Similar to enum classes in C++)
+- Product type creators (*similar to structs in C and Rust*)
+- Sum type creators (*similar to enums in Rust and unions in C and C++*)
+- Semantic type creators (_similar to derived types in Ada but with added semantics_)
+- Semantic ranged integer type creators (*similar to Integers in Ada*)
+- Value definition type creators (*similar to enum classes in C++*)
 - Value semantics:
-  - Move value semantics (Destructive move semantics)
+  - Move value semantics (*flexible destructive move semantics*)
   - Copy value semantics
 - Functions
-- Marcos (Inlined functions devoid of value semantics)
-- Objects (Known as variables in various programming languages)
+- Marcos (*Inlined functions devoid of value semantics*)
+- Objects (*known as variables in various programming languages*)
 - Objects are immutable by default
 - Circular dependency resolution for object initialization in the global space
 - Thread local objects
 - Loops:
-  - For iterator loop (Similar to for loops in the Rust programming language)
-  - While loop (Similar to for loops in the C and C++ programming languages)
-- Interfaces via Contract and impl (Similar to trait and impls in Rust)
+  - For iterator loop (*similar to for loops in the Rust programming language*)
+  - While loop (*similar to for loops in the C and C++ programming languages*)
+- Interfaces via Contract and impl (*similar to trait and impls in Rust*)
 - Language defined generic unicode string interface that supports extensive unicode functionalities
 - Robust compile time evaluation semantics
 - Explicit and implicit default value argument entry
-- Value argument list generators (Allows value list generation in any value argument entry)
-- Access restriction semantics (Controls the visibility of language items)
+- Value argument list generators (*allows value list generation in any value argument entry*)
+- Access restriction semantics (*controls the visibility of language items*)
 - Import system
 - Compile time polymorphism:
-  - Type parameters (parametric polymorphism in programming or colloquially known as generics) that support generic typing
-    - Type constructor type parameter (Similar in concept to Higher Kinded Types in Haskell but limited in semantics to keep it simple)
-  - Compile time value parameters (Basically the value parameter version of type parameters, can be seen in parametric polymorphism implementation in languages like Rust and C++)
+  - Type parameters (_parametric polymorphism in programming or colloquially known as generics_) that support generic typing
+    - Type constructor type parameter (_similar in concept to Higher Kinded Types in Haskell but limited in semantics to keep it simple_)
+  - Compile time value parameters (_basically the value parameter version of type parameters, can be seen in parametric polymorphism implementation in languages like Rust and C++_)
 - Run time polymorphism:
-  - Contract types (Basically impl types in Rust but with a significantly different implementation)
-- Groupings (Pinnacle of less typing and semantic syntax grouping in a high level context)
-- Variadics (Similar in concept to paramter packs in C++)
-- Tuples and variants (Basically anonymous product and sum types enabled by the variadics feature)
-- Language communication interface (**LCI**):
-  - Attribute LCI (Includes the various language constraints and many more)
-  - Expression LCI (Exposes interfaces to language metadata and special language functions)
-  - Type LCI (Exposes interfaces to language type system metadata)
-  - Miscellaneous LCI (Involves unrelated special language functionality)
-- Constraint application (Allows the entry of user defined constraint on various language items)
-- Unified function call (**UFC**)
-- Redefined precedence for various operators
+  - Contract types (_basically impl types in Rust but with a significantly different implementation_)
+- Groupings (_pinnacle of less typing and semantic syntax grouping in a high level context_)
+- Variadics (_similar in concept to parameter packs in C++ which are just simply compile time type safe variadics_)
+- Tuples and variants (_basically anonymous product and sum types enabled by the variadics feature_)
+- Language communication interface (_**LCI**_):
+  - Attribute LCI (_includes the various language constraints and many more_)
+  - Expression LCI (_exposes interfaces to language metadata and special language functions_)
+  - Type LCI (_exposes interfaces to language type system metadata_)
+  - Miscellaneous LCI (_involves unrelated special language functionality_)
+- Constraint application (_allows the entry of user defined constraint on various language high-level constructs_)
+- Unified function call
+- Redefined precedence for some operators
 - Limited operator overloading
-- Operator combinations (Allows for chaining certain operators)
+- Operator combinations (*allows for chaining certain operators*)
 - Collection expressions
-- Literal tags (Known as literal types in C++)
+- Literal tags (*known as literal types in C++*)
 - Custom collection expression definition
 - Custom literal tag definition
 - Blocks as expressions
 - Conditional expressions:
   - If conditional expression
-  - Match condtional expression
-  - Or-field query conditional expression (A more robust form of pattern matching expression in functional languages and Rust)
+  - Match conditional expression
+  - Or-field query conditional expression (_a more robust form of pattern matching expression in functional languages and Rust_)
 - References:
-  - Value references (Similar in concept to references in C++ and Rust)
+  - Value references (_similar in concept to references in C++ and Rust_)
     - Non allocating value references
     - Allocating value references
-  - Memory address references (Similar in concept to pointers in C and C++):
+  - Memory address references (_similar in concept to pointers in C and C++_):
     - Non allocating memory address references
     - Allocating memory address references
-- Implicit lifetime semantics (Similar in concept to explicit lifetime parameters in rust)
-- Scope definitions (Similar in concept to `namespaces` in C++)
-- Type creator introspection
-- Value unpacking (Similar to structured binding in C++ but way more expressive and robust)
-- 1-based indexing (Subjectively better than 0-based indexing for me)
+- Implicit lifetime semantics (_similar in concept to explicit lifetime parameters in Rust_)
+- Scope definitions (_similar in concept to `namespaces` in C++_)
+- Compile time type creator introspection
+- Value unpacking (_similar to structured binding in C++ but way more expressive and robust_)
+- 1-based indexing (*subjectively better than 0-based indexing for me*)
 - Foreign interface
-- Platform agnostic computing
 - White-space decisive parsing
 - Well defined language semantics
 - Excellent compiler error messages called error logs
 
+## Prospective Features
+
+- Concurrency aware programming
+  - Thread types and constraint semantics for multi-threading
+  - And others
+- SIMD programming
+- Implementation of the programming area aware (_platform agnostic_) computing
+
 ## Nc Programming Language Examples
 
-Due to NPL not having syntax highlighting yet in the code format section of markdown, the rust programming language is selected as the programming language to use its syntax highlighting because it is the only language included that remotely resembles NPL syntax, therefore enables the syntax highlighting of a few. It is for this same reason that NPL discard and document single-line comment contents (`>!` & `>:`)  are enclosed with double quotes to prevent syntax highlighting, since the comments syntax are different than rust's.
+Due to NPL not having syntax highlighting yet in the code section of markdown, the Rust programming language is selected as the programming language, to use its syntax highlighting because it is the only language included that remotely resembles NPL syntax. It is for this same reason that NPL discard and document single-line comment contents (`>!` & `>:`)  are enclosed with double quotes to prevent syntax highlighting, since the comments syntax are different than Rust's.
 
 - Hello world example
 
@@ -408,12 +419,13 @@ use impl display 		>! "For printing values in a displayable format"
 end scope
 ```
 
-- Compile time type introspection example
+- Compile time type creator introspection example
 
 ```rust
 import marco std:io:printf
 
 fn main {
+ 
 	obj person_struct = exp:getTypeCreatorMetadata[person, array]()
 
     printf("TypeCreator\t[$(person_struct.kind)]\nType\t\t[$(person_struct.typeName)]\n")
