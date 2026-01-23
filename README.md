@@ -20,5 +20,6 @@ There are many more nc projects to come which would mostly involve application s
 
 - **Nc text and code editor**
 - **Nc document editor**
+- **Nc advertising space**
 - **Nc chat**
 - **Nc operating system**

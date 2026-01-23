@@ -8,7 +8,7 @@ It is basically a platform (_programming area_) aware programming language and i
 
 ## My Naivete (31/12/2025)
 
-The above insanely ambitious goal of the programming language implies a gross naivete on my part, as of the time of writing this document, I am the sole contributor to this project, I have no big company backing, I have no financing and my knowledge of the general programming space needed to implement the platform (*programming area*) aware feature is minuscule, abstract and laughable at best, only thing I have in ample supply is my determination, optimism and fictitious mindset, but that has no concrete pragmatic benefit to this project. So, take what you read here with a grain of salt till you see application software written in the programming language and some form of adoption from the programming community. The reasons why I started this project in the first place can be read in my **Dear God, Why?** document.
+The above insanely ambitious goal of the programming language implies a gross naivete on my part, as of the time of writing this document, I am the sole contributor to this project, I have no big company or community backing, I have no financing and my knowledge of the general programming space needed to implement the platform (*programming area*) aware feature is minuscule, abstract and laughable at best. So, take what you read here with a grain of salt till you see real application software written in the programming language and some form of adoption from the programming community.
 
 ## Nc Programming Language Features
 
@@ -109,8 +109,10 @@ The following describes some of the many features of the nc programming language
 - Concurrency aware programming
   - Thread types and constraint semantics for multi-threading
   - And others
-- SIMD programming
-- Implementation of the programming area aware (_platform agnostic_) computing
+- SIMD programming (*implemented natively in static arrays*)
+- Implementation of the platform (*programming area*) aware computing feature
+- Native assembly language entry with a generic assembly language
+- Native integration with nc markup language or, preferably, a graphics language of some kind, which would emulate svelte's design in a way to redefine graphical user interface programming. To be used in both the web and systems platforms.
 
 ## Nc Programming Language Examples
 
@@ -131,9 +133,9 @@ fn main {
 ```rust
 fn main {
     obj _ r"Do you love 🐻s?" = true
-    obj _ r:for = "Damn! using the `for` language identifier as a user identifier"
+    obj _ r'for = "Damn! using the `for` language identifier as a user identifier"
     obj _ r"Are you an ape(🦍)?" = true
-    obj _ r:struct = "Wow! using the `struct` language identifier as a user identifier"
+    obj _ r'struct = "Wow! using the `struct` language identifier as a user identifier"
 }
 ```
 
@@ -181,7 +183,7 @@ fn main {
 }
 ```
 
-- Value Unpacking examples
+- Value Unpacking example
 
 ```rust
 import type std:string:string
@@ -367,6 +369,7 @@ fn main {
     obj _ = obj: vector([2.0, 3.0]) >! "Using object constructors (2d vectors)"
     obj _ = vector[2.0, 3.0] >! "Using collection expressions (2d vectors)"
     
+    >! "Others"
     obj vec3d_add_result = vector[2.0, 3.0, 9.0] + vector[5.0, 6.0, 1.0]
     obj vec2d_add_result = vector[4.6, 9.1] + vector[3.0, 1.0]
     
