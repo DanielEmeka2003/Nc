@@ -1,18 +1,30 @@
 # Nc Programming Language Official Specification
 
-This document defines the formal specification of the nc programming language which would be used to write the compiler of the nc programming language, form tutorials for the nc programming language and be the source of reference to any questions, debates, academic talks or texts about the nc programming language. Nc programming language supports both **Just In Time** (***JIT***) and **Ahead Of Time** (***AOT***) compilation, **Just in Time** compilation would be used to implement its compile time features and by extension its not so conventional interpreter, all would be discussed at length in this document. Unlike most formal specifications, this document is written in a beginner friendly manner to facilitate faster understanding of the document for persons that have met the criteria of possessing rudimentary knowledge in programming concepts, the nc text processing language and compiler development.
+This document defines the formal specification of the nc programming language which would be used achieve the following objectives:
+
+- Implement a compiler, transpiler, interpreter or virtual machine for the programming language
+- Form tutorials and learning materials for the programming language
+- Be the source of reference to any question answers, debates or academic talks about the programming language
+
+Because of the aim to achieve the above objectives, this formal specification document details extraneous information about the programming language and its design, most notably the reasoning behind certain design decisions. And it is written in a manner approachable to any individual that have met the limited criteria of possessing **rudimentary** knowledge in basic programming concepts, the nc text processing language, and compiler development (*only needed if an individual's aim is to achieve the first objective*).
 
 ## Author
 
-The author of this specification document is the creator of the nc project **Daniel Emeka**. In subsequent sections, in matters that requires self referencing, the author will refer to himself in the first person primarily to create an informal tone in the midst of this formal document. It is a contrast the author wishes to convey in this document.
+The author of this specification document is the creator of the nc project **Daniel Emeka**. In subsequent sections concerning matters that require self referencing, the author will be referred to in the third person where a wording like ***"I did not like the idea"***, is substituted for ***"the author did not like the idea"***.
 
----
+## Nc Programming Language
 
-It is encouraged to read this specification document as a markdown document using a dedicated markdown editor or viewer like **Typora** because of it's continuous flow, meaning unlike the PDF version, it isn't divided into pages.
+Nc programming language is a multi-paradigm next generation high-level programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space with the capability of integrating future technologies due to its robust design.
 
-An example of the Typora interface:
+Despite all it offers, the programming language's main purpose is to make it possible to 
 
-![TyporaExample](TyporaExample.png)
+**[Todo: Think of how to structure this section bruh]**
+
+Nc programming language or informally called NPL is an invasive constraint based, strongly typed, memory safe, platform aware, next generation programming language that aims to redefine the programming space by incorporating any and all current technologies in the programming space while also making it possible to easily integrate future technologies with its robust design.
+
+It is a programming language designed from its infancy to accommodate every known area of programming and also more importantly, make a programmer's experience equal to, comparable or better than programming languages specifically designed for those areas. The language does this by centralizing specific functionalities of those programming areas thereby making itself aware of the various areas then dictates when a programmer can use said functionalities based on its settings, the programming areas are referred to as platforms in NPL. An example of said feature would be using the programming language as a low and high level systems programming language, mobile systems programming language, **GUI** programming language, web programming language, game design programming language, embedded systems programming language, scripting programming language and many more (_although it cannot be used as a data language, that is the use cases of **JSON**, **XML** or **TOML**, nc data representation language already serves such purpose and is natively integrated in NPL_).
+
+
 
 The official acronym of the programming language is **NPL** which stands for **N**c **P**rogramming **L**anguage - obviously - and the official source code file extension is `.npl`.
 
@@ -31,7 +43,7 @@ NPL is comprised of four basic parts, like all programming languages, which are:
 
 Comments are informal constructs ignored by the programming language used to convey expression of thought, intent or ideas in code, tokens are the fundamental units of the programming language, high-level construct syntax describes the format of the various high-level constructs built from tokens and high-level construct semantics details the meaning of the various high-level construct syntax, where they are expected to be, their use and their low-level implementations in an abstract manner.
 
-To implement greater understanding of this document and to keep with the promise of it being written in a beginner friendly way, the four basic parts would be explained explicitly one after the other while also enumerating their co-dependence.
+To implement greater understanding of this document and to keep with the promise of it being written in a beginner friendly way, the four basic parts would be explained explicitly one after the other while also enumerating their interdependence.
 
 ## Comments
 
@@ -589,7 +601,8 @@ Unlike the comment and token sections, this section has a fixed format for how t
 The format of this section shown in NTPL for fun:
 
 ```json
-highLevelConstructSyntaxSection = primarySyntax secondarySyntax? auxiliarySyntax? supplementaryInfo?
+highLevelConstructSyntaxSection =
+	primarySyntax secondarySyntax? auxiliarySyntax? supplementaryInfo?
 ```
 
  Obviously, the above NTPL function has no real purpose in this NPL specification other than to describe the format of this section.
@@ -609,7 +622,14 @@ fileContent = (object|function|marco|scope|import|contract|typeCreator)*
 Below is the type syntax written in NTPL:
 
 ```json
-type = basicType|functionType|contractType|valueReference|memoryAddressReferenceType|typeLCI|typeFromExpression
+type =
+	basicType
+	|functionType
+	|contractType
+	|valueReference
+	|memoryAddressReferenceType
+	|typeLCI
+	|typeFromExpression
 ```
 
 Auxiliary syntaxes for types syntax written in NTPL:
@@ -761,7 +781,14 @@ constraintApplication = 'apply' logicalBinaryExpression|'_'
 Below is the function syntax written in NTPL:
 
 ```json
-function = 'fn' captureSpace? functionIdentifier valueParameterEntry? returnEntry? constraintApplication? block|';'
+function =
+	'fn'
+	captureSpace?
+	functionIdentifier
+	valueParameterEntry
+	returnEntry
+	constraintApplication?
+	block|';'
 ```
 
 Auxiliary syntaxes for function syntax written in NTPL:
@@ -771,7 +798,10 @@ caputreSpace = '|'list(expression|(userIdentifierToken '=' expressions))'|'
 
 returnEntry = type|'type'|'!'
 
-functionIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
+functionIdentifier =
+	userIdentifierToken|grouping(userIdentifierToken)
+	typeParameterEntry?
+	comptimeValueParameterEntry?
 ```
 
 ### Marco Syntax
@@ -779,13 +809,22 @@ functionIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParam
 Below is the marco syntax written in NTPL:
 
 ```json
-marco = 'marco' marcoIdentifier valueParameterEntry? returnEntry? constraintApplication? block|';'
+marco =
+	'marco'
+	marcoIdentifier
+	valueParameterEntry
+	returnEntry
+	constraintApplication?
+	block|';'
 ```
 
 Auxiliary syntaxes for marco syntax written in NTPL:
 
 ```json
-marcoIdentifier = userIdentifierToken|miscLCI|operator|grouping(userIdentifierToken|miscLCI|operator) typeParameterEntry? comptimeValueParameterEntry?
+marcoIdentifier = 
+	userIdentifierToken|miscLCI|operator|grouping(userIdentifierToken|miscLCI|operator)
+	typeParameterEntry?
+	comptimeValueParameterEntry?
 
 operator = 'operator' operator
 
@@ -803,23 +842,42 @@ typeCreators = structTypeCreator|unionTypeCreator|valueDefCreator|uniqueTypeCrea
 Secondary syntaxes for type creators syntax written in NTPL:
 
 ```json
-structTypeCreator = 'struct' genericTypeCreatorIdentifier constraintApplication? ('=' list(field))|';'
+structTypeCreator =
+	'struct' genericTypeCreatorIdentifier constraintApplication? ('=' list(field))|';'
 
 blankStructTypeCreator = 'struct' '=' list(field)
 
-unionTypeCreator = 'union' genericTypeCreatorIdentifier constraintApplication? ('=' list(field))|';'
+unionTypeCreator =
+	'union' genericTypeCreatorIdentifier constraintApplication? ('=' list(field))|';'
 
-valueDefTypeCreator = 'valueDef' typeArgumentEntry? userIdentifierToken|grouping(userIdentifierToken) '=' list(userIdentifierToken)
+valueDefTypeCreator =
+	'valueDef'
+	typeArgumentEntry?
+	userIdentifierToken|grouping(userIdentifierToken)
+	'='
+	list(userIdentifierToken)
 
-uniqueTypeCreator = 'unique' genericTypeCreatorIdentifier constraintApplication? '=' type uniqueTypeCreatorRangeEntry?
+uniqueTypeCreator =
+	'unique'
+	genericTypeCreatorIdentifier
+	constraintApplication?
+	'='
+	type
+	uniqueTypeCreatorRangeEntry?
 ```
 
 Auxiliary syntaxes for type creators syntax written in NTPL:
 
 ```json
-genericTypeCreatorIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry? comptimeValueParameterEntry?
+genericTypeCreatorIdentifier =
+	userIdentifierToken|grouping(userIdentifierToken)
+	typeParameterEntry?
+	comptimeValueParameterEntry?
 
-uniqueTypeCreatorRangeEntry = 'from' integerNumberLiteralToken'~'integerNumberLiteralToken
+uniqueTypeCreatorRangeEntry =
+	'from'
+	(integerNumberLiteralToken'~'integerNumberLiteralToken)
+	|(characterTextLiteralToken'~'characterTextLiteralToken)
 ```
 
 ### Contract Syntax
@@ -827,13 +885,19 @@ uniqueTypeCreatorRangeEntry = 'from' integerNumberLiteralToken'~'integerNumberLi
 Below is the contract syntax written in NTPL:
 
 ```json
-contract = 'contract' typeParameterEntry contractIdentifier contractInheritancePart? constraintApplication? contractBody
+contract =
+	'contract'
+	typeParameterEntry
+	contractIdentifier
+	contractInheritancePart?
+	constraintApplication?
+	contractBody
 ```
 
 Auxiliary syntaxes for contract syntax written in NTPL:
 
 ```json
-contractBody = '=' (contractContentPart|import)+ 'end'
+contractBody = '=' (contractContentPart|import)+ 'end'.'contract'
 
 contractIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeParameterEntry?
 
@@ -857,7 +921,7 @@ implIdentifier = userIdentifierToken|grouping(userIdentifierToken) typeArgumentE
 
 implContentPart = attributeLCI? function|marco
 
-implBody = '=' (implContentPart|import)+ 'end'
+implBody = '=' (implContentPart|import)+ 'end'.'impl'
 ```
 
 ### Scope Syntax
@@ -873,11 +937,14 @@ Auxiliary syntaxes for scope syntax  written in NTPL:
 ```json
 scopeBody = '=' (scopeContentPart|impl|use|import)* 'end scope'
 
-scopeIdentifier = (userIdentifierToken|typeScopeIdentifier)|grouping(userIdentifierToken|typeScopeIdentifier)
+scopeIdentifier =
+	(userIdentifierToken|typeScopeIdentifier)
+	|grouping(userIdentifierToken|typeScopeIdentifier)
 
 scopeContentPart = attributeLCI? function|marco|typeCreators|object|scope
 
-typeScopeIdentifier = '@' userIdentifierToken typeParameterEntry? comptimeValueParameterEntry?
+typeScopeIdentifier =
+	'@' userIdentifierToken typeParameterEntry? comptimeValueParameterEntry?
 ```
 
 ### Expressions Syntax
@@ -895,9 +962,17 @@ assignmentBinaryExpression = list(logicalBinaryExpression, assignmentBinaryOpera
 
 logicalBinaryExpression = list(equalityBinaryExpression, logicalBinaryOperator)
 
-equalityBinaryExpression = list(relationalBinaryExpression, equalityBinaryOperator)
+equalityBinaryExpression = 
+	relationalBinaryExpression (
+        equalityBinaryOperator relationalBinaryExpression
+     	(logicalOperatorCombinations relationalBinaryExpression)*
+	)?
 
-relationalBinaryExpression = list(rangeBinaryExpression, relationalBinaryOperator)
+relationalBinaryExpression =
+	rangeBinaryExpression (
+        relationalBinaryOperator rangeBinaryExpression
+        (logicalOperatorCombinations rangeBinaryExpression)*
+    )?
 
 rangeBinaryExpression = list(additiveBinaryExpression, '~'|'~.')
 
@@ -907,13 +982,30 @@ multiplicativeBinaryExpression = list(exponentiationBinaryExpression, '*'|'/'|'%
 
 exponentiationBinaryExpression = list(fromBinaryExpression, '^')
 
-fromBinaryExpression = ('exp' 'from' scopedIdentifier typeArgumentEntry? comptimeValueArgumentEntry?)|('fn' 'from' dotBinaryExpression)|dotBinaryExpression
+fromBinaryExpression =
+	('exp' 'from' scopedIdentifier typeArgumentEntry? comptimeValueArgumentEntry?)
+	|('fn' 'from' dotBinaryExpression)|dotBinaryExpression
 
-dotBinaryExpression = unaryPrefixExpression unaryPostfixOperator* ('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
+dotBinaryExpression =
+	unaryPrefixExpression unaryPostfixOperator*
+	('.' scopedIdentifier|scopedIdentiferPart unaryPostfixOperator*)*
 
 unaryPrefixExpression = (unaryPrefixOperator unaryPrefixExpression)|primaryExpression
 
-primaryExpression = collectionExpression|(':'? scopedIdentifier)|'variadic'|expressionType|conditionalExpression|objectExpression|functionExpression|block|literal|precedenceEntry|grouping(expression|'_')|expressionLCI
+primaryExpression =
+	collectionExpression
+	|(':'? scopedIdentifier)
+   	|'variadic'
+ 	|expressionType
+ 	|conditionalExpression
+ 	|objectExpression
+ 	|functionExpression
+ 	|block
+ 	|literal
+ 	|precedenceEntry
+ 	|grouping(expression|'_')
+ 	|expressionLCI
+      
 ```
 
 Auxiliary syntaxes for expressions syntax written in NTPL:
@@ -923,19 +1015,25 @@ assignmentBinaryOperator = '='|':='|'+='|'-='|'*='|'/='|'%='|'^='|'=-'|'=/'|'=%'
 
 logicalBinaryOperator = 'not'? 'and'|'or'|'xor'
 
-equalityBinaryOperator = 'not'? 'eq'|'in'
+equalityBinaryOperator = 'not'? 'eq'|'in'|'impls'
 
-relationalBinaryOperator = 'lt'|'gt' relationalBinaryOperatorCombinations?
+relationalBinaryOperator = 
+	('lt' ('or' ('not'? 'eq')|'gt'))
+	|('gt' ('or' ('not'? 'eq')|'lt'))
 
-relationalBinaryOperatorCombinations = 'and'|'or' equalityBinaryOperator|'lt'|'gt'
+logicalOperatorCombinations = 'and'|'or' equalityBinaryOperator|'lt'|'gt'
 
-unaryPostfixOperator = functionCall|orFieldQueryConditionalExpression|('.['expression']')|('.{'expression'}')
+unaryPostfixOperator =
+	functionCall
+	|orFieldQueryConditionalExpression
+	|('.['expression']')
+	|('.{'expression'}')
 
-functionCall = (typeArgumentEntry comptimeValueArgumentEntry? valueArgumentEntry)|(comptimeValueArgumentEntry valueArgumentEntry)|valueArgumentEntry
+functionCall = typeArgumentEntry?.comptimeValueArgumentEntry?.valueArgumentEntry
 
 unaryPrefixOperator = '-'|'not'|('mut'? '&'|'addressof')
 
-collectionExpression = userIdentifierToken? '['list(expression)']'
+collectionExpression = userIdentifierToken? '['(list(expression)'|')? list(expression)']'
                                  
 precedenceEntry = '('expression')'
 
@@ -943,29 +1041,50 @@ expressionType = '@'.type
 
 scopedIdentifier = (userIdentifierToken|'outer').scopedIdentifierPart?
 
-scopedIdentifierPart = ':'.(userIdentifierToken|'outer'|grouping(scopedIdentifier)).(':'.(userIdentifierToken|'outer'|grouping(scopedIdentifier)))*
+scopedIdentifierPart =
+	':'
+	.(userIdentifierToken|'outer'|grouping(scopedIdentifier))
+	.(':'.(userIdentifierToken|'outer'|grouping(scopedIdentifier)))*
 
-objectExpression = 'obj:' (type.valueArgumentEntry?)|grouping((type.valueArgumentEntry?))
+objectExpression = 'obj:' (type.valueArgumentEntry?)|grouping(type.valueArgumentEntry?)
 
 functionExpression = 'fn' captureSpace? functionExpressionValueParameterEntry type? block
 
 conditionalExpression = ifConditionalExpression|matchConditionalExpression
 
-ifConditionalExpression = 'if' (list(object) ';')? list((expression block), '|')) elseBranch?
+ifConditionalExpression =
+	'if'
+    (list(object) ';')?
+	list((expression block), '|'))
+	(panicBranch|jumpStatementBranch|elseBranch)?
 
-matchConditionalExpression = 'match' (list(object) ';')? expression 'with' list((expression block), '|') elseBranch?
+matchConditionalExpression =
+    'match'
+	(list(object) ';')?
+    expression
+    'with'
+    list((list(expression) block), '|')
+    (panicBranch|jumpStatementBranch|elseBranch)?
 
-orFieldQueryConditionalExpression = '=>' list(orFieldQueryBranch, '|') elseBranch?
+orFieldQueryConditionalExpression =
+	'=>'
+	(list(object) ';')?
+    list((userIdentifierToken|orFieldQuerySpecialBranch block), '|')
+    (panicBranch|jumpStatementBranch|elseBranch)?
 
-orFieldQueryBranch = mainOrFieldQueryBranch|('{'userIdetifierToken'}')|('('userIdentifierToken')')
+orFieldQuerySpecialBranch = list(aliasOrFieldQueryBranch|unpackOrFieldQueryBranch)
 
-mainOrFieldQueryBranch = mainOrFieldQueryPart1 mainOrFieldQueryPart2? block
+aliasOrFieldQueryBranch =
+	userIdentifierToken|('('list(userIdentifierToken)')')
+    '('userIdentifierToken')'
 
-mainOrFieldQueryPart1 = userIdentifierToken|('{' list(userIdentifierToken, _, `+`) '}')
-
-mainOrFieldQueryPart2 = ('('userIdentifierToken')')|('['list(userIdentifierToken)']')
+unpackOrFieldQueryBranch = userIdentifierToken '['list(userIdentifierToken)']'
 
 elseBranch = 'else' block?
+
+panicBranch = '|' 'panic'.functionCall?
+
+jumpStatementBranch = '|' jumpStatement
 ```
 
 #### Supplementary Info
@@ -1006,18 +1125,18 @@ The below table shows the precedence levels of the various operators in NPL with
 
 | Rank | Operator                                                     |
 | ---- | ------------------------------------------------------------ |
-| 12th | Binary assignment operators `'='`, `':='` , `'+='`, `'-='`, `'*='`, `'/='`, `'%='`, `'^='`, `'=-'`, `'=/'`, `'=%'` |
-| 11th | Binary logical operators `'and'`, `'or'`, `'xor'`            |
-| 10th | Binary equality operators `'eq'`, `'in'`                     |
-| 9th  | Binary relational operators `'lt'`, `'gt'`                   |
-| 8th  | Binary range operators `'~'`, `'~.'`                         |
-| 7th  | Binary additive operators `'+'`, `'-'`                       |
-| 6th  | Binary multiplicative operators `'*'`, `'/'`, `'%'`          |
+| 12th | Binary assignment operators `'='` `':='` `'+='` `'-='` `'*='` `'/='` `'%='` `'^='` `'=-'` `'=/'` `'=%'` |
+| 11th | Binary logical operators `'and'` `'or'` `'xor'`              |
+| 10th | Binary equality operators `'eq'` `'in'` `impls`              |
+| 9th  | Binary relational operators `'lt'` `'gt'`                    |
+| 8th  | Binary range operators `'~'` `'~.'`                          |
+| 7th  | Binary additive operators `'+'` `'-'`                        |
+| 6th  | Binary multiplicative operators `'*'` `'/'` `'%'`            |
 | 5th  | Binary exponentiation operator `'^'`                         |
 | 4th  | Binary from operator `'from'`                                |
-| 3rd  | Unary postfix operators `functionCall`, `'.['expression']'`, `orFieldQueryConditionalExpression` |
+| 3rd  | Unary postfix operators `functionCall` `'.['expression']'` `orFieldQueryConditionalExpression` |
 | 2nd  | Binary dot operator `.`                                      |
-| 1st  | Unary prefix operators `'-'`, `'not'`, `'mut'? '&'|'addressof'` |
+| 1st  | Unary prefix operators `'-'` `'not'` `'mut'? '&'|'addressof'` |
 
 There is also the notable mention of primary expressions from the NTPL of primary expressions syntax, which stay at a level unconstrained by precedence levels.
 
